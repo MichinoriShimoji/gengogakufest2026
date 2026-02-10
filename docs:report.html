@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>宮古語 mmja 語レベル分析 v4</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@400;600;700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{--bg:#faf9f6;--text:#1a1a1a;--body:#3a3a3a;--muted:#888;--bdr:#ddd;--card:#fff;--card2:#f5f4f0;
+--red:#c43c3c;--red-l:#f0d8d8;--grn:#1e6b54;--grn-l:#d0e8de;--blu:#1e4a7a;--blu-l:#d0ddef;--gld:#8a6e1e;--gld-l:#ede4c8;--pur:#7b5ea7;--pur-l:#e0d6ef;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Source Sans 3','Noto Sans JP',sans-serif;font-size:14px;color:var(--body);background:var(--bg);line-height:1.6;max-width:820px;margin:0 auto;padding:30px 24px;}
+h1{font-family:'Cormorant Garamond','Noto Serif JP',serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.sub{font-size:14px;color:var(--muted);margin-bottom:24px;}
+section{margin-bottom:44px;}
+section h2{font-family:'Cormorant Garamond','Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--bdr);}
+section h2 .n{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red);margin-right:6px;}
+section h3{font-size:15px;font-weight:600;margin:20px 0 10px;color:var(--text);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{padding:5px 8px;text-align:left;border-bottom:1px solid var(--bdr);}
+th{font-weight:600;color:var(--text);font-size:12px;background:var(--card2);}
+td.r{text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.m{font-family:'JetBrains Mono',monospace;font-size:11px;padding:1px 4px;border-radius:2px;font-weight:500;}
+.mm{background:var(--red-l);color:var(--red);}.mu{background:var(--blu-l);color:var(--blu);}.mn{background:var(--pur-l);color:var(--pur);}
+.kf{margin:12px 0;padding:8px 12px;border-radius:4px;font-size:13px;line-height:1.5;border-left:3px solid;}
+.kf-red{border-color:var(--red);background:rgba(196,60,60,.05);}.kf-grn{border-color:var(--grn);background:rgba(30,107,84,.05);}.kf-gld{border-color:var(--gld);background:rgba(138,110,30,.05);}.kf-blu{border-color:var(--blu);background:rgba(30,74,122,.05);}
+.note{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:6px;padding:12px;}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--card2);padding:1px 4px;border-radius:2px;}
+.hl{background:rgba(196,60,60,.06);}.hb{background:rgba(30,74,122,.04);}.hp{background:rgba(123,94,167,.04);}
+svg text{font-family:'JetBrains Mono',monospace;}
+</style></head><body>
+
+<h1>宮古語 mmja の分布と機能 — 語レベル分析</h1>
+<p class="sub"><span class="m mm">mmja</span> / <span class="m mu">unu</span> / <span class="m mn">naugara</span> 三形式比較（FIL カテゴリなし）</p>
+
+<section id="s0">
+<h2><span class="n">0.</span> コーパス</h2>
+<div class="grid2">
+<div><table>
+<tr><th>項目</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">値</th></tr>
+<tr><td>発話数</td><td class="r">774</td></tr>
+<tr><td>語トークン</td><td class="r">4,746</td></tr>
+<tr><td>POS 種数</td><td class="r">28</td></tr>
+<tr><td>語彙サイズ</td><td class="r">1,281</td></tr>
+</table></div>
+<div><table>
+<tr><th>ターゲット</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th></tr>
+<tr class="hl"><td><span class="m mm">mmja</span></td><td class="r">170</td></tr>
+<tr class="hb"><td><span class="m mu">unu</span></td><td class="r">40</td></tr>
+<tr class="hp"><td><span class="m mn">naugara</span></td><td class="r">23</td></tr>
+</table></div></div>
+<h3>POS 分布（上位 12）</h3>
+<table><tr><th>POS</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">頻度</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">割合</th></tr>
+<tr><td><code>N</code></td><td class="r">801</td><td class="r">16.9%</td></tr>
+<tr><td><code>V</code></td><td class="r">760</td><td class="r">16.0%</td></tr>
+<tr><td><code>CP</code></td><td class="r">667</td><td class="r">14.1%</td></tr>
+<tr><td><code>ISP</code></td><td class="r">460</td><td class="r">9.7%</td></tr>
+<tr><td><code>INTJ</code></td><td class="r">404</td><td class="r">8.5%</td></tr>
+<tr><td><code>PRN</code></td><td class="r">249</td><td class="r">5.2%</td></tr>
+<tr><td><code>SFP</code></td><td class="r">236</td><td class="r">5.0%</td></tr>
+<tr><td><code>JPN</code></td><td class="r">199</td><td class="r">4.2%</td></tr>
+<tr><td><code>CJP</code></td><td class="r">197</td><td class="r">4.2%</td></tr>
+<tr><td><code>LP</code></td><td class="r">143</td><td class="r">3.0%</td></tr>
+<tr><td><code>AUX</code></td><td class="r">142</td><td class="r">3.0%</td></tr>
+<tr><td><code>CONJ</code></td><td class="r">92</td><td class="r">1.9%</td></tr>
+</table></section>
+<section id="s1">
+<h2><span class="n">1.</span> 圧縮ベースの位置規則性分析</h2>
+<p>gzip 圧縮サイズでターゲット出現位置の規則性を評価。シャッフル帰無分布 N=500。Bonferroni 補正（k=3: 3形式 × 1シャッフル種）。</p>
+
+<h3>1.0 方法の仕組み</h3>
+<p>各発話の語列を、ターゲットなら <code>TGT_</code>、非ターゲットならその <code>word_pos</code>（先頭4文字）に符号化する。</p>
+<div class="card" style="max-width:600px;margin:10px 0;">
+<div style="font-size:12px;color:var(--muted);margin-bottom:4px;">例: 発話 <code>V mmja N CP V</code></div>
+<table style="margin:4px 0;font-size:12px;">
+<tr><th>元データ</th><td><code>V___</code></td><td><code style="background:var(--red-l);color:var(--red);">TGT_</code></td><td><code>N___</code></td><td><code>CP__</code></td><td><code>V___</code></td></tr>
+<tr><th>shuf 例1</th><td><code>V___</code></td><td><code>N___</code></td><td><code style="background:var(--red-l);color:var(--red);">TGT_</code></td><td><code>CP__</code></td><td><code>V___</code></td></tr>
+<tr><th>shuf 例2</th><td><code style="background:var(--red-l);color:var(--red);">TGT_</code></td><td><code>N___</code></td><td><code>V___</code></td><td><code>CP__</code></td><td><code>V___</code></td></tr>
+</table>
+<p class="note" style="margin-top:6px;">語を入れ替えるのではなく、<strong style="color:var(--text);"><code>TGT_</code> マーカーの位置</strong>をランダムに選び直す。非ターゲット語の POS 列は固定のまま。gzip はバイト列の繰り返しパターンを検出するため、<code>TGT_</code> が特定の POS 文脈に偏って出現するほど圧縮が効き、サイズが小さくなる。シャッフルでその噛み合いが壊れると圧縮サイズが増大する。</p>
+</div>
+<p>uniform シャッフルは発話内の全位置から等確率で選ぶ。</p>
+
+<h3>1.1 Uniform シャッフル</h3>
+<table><tr><th>ターゲット</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">|Δ/n|</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">z</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">p (Bonf.)</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">sig</th></tr>
+<tr class="hl"><td><span class="m mm">mmja</span></td><td class="r">170</td><td class="r">0.399</td><td class="r" style="font-weight:700;color:var(--red);">-5.44</td><td class="r">&lt;.0001</td><td class="r" style="font-weight:700;color:var(--red);">***</td></tr>
+<tr class="hb"><td><span class="m mu">unu</span></td><td class="r">40</td><td class="r">0.212</td><td class="r">-1.20</td><td class="r">1.00</td><td class="r">n.s.</td></tr>
+<tr class="hp"><td><span class="m mn">naugara</span></td><td class="r">23</td><td class="r">0.391</td><td class="r">-1.54</td><td class="r">.74</td><td class="r">n.s.</td></tr>
+</table>
+<div class="grid2" style="margin-top:16px;">
+<div class="card"><div style="font-size:12px;font-weight:600;color:#c43c3c;margin-bottom:4px;">mmja（z=-5.44）</div><svg viewBox="0 0 340 90" style="width:100%;max-width:340px;">
+<rect x="0" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="14" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="27" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="41" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="54" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="68" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="82" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="95" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="109" y="69" width="13" height="1" fill="#d0d0d0" rx="1"/>
+<rect x="122" y="66" width="13" height="4" fill="#d0d0d0" rx="1"/>
+<rect x="136" y="60" width="13" height="10" fill="#d0d0d0" rx="1"/>
+<rect x="150" y="54" width="13" height="16" fill="#d0d0d0" rx="1"/>
+<rect x="163" y="37" width="13" height="33" fill="#d0d0d0" rx="1"/>
+<rect x="177" y="40" width="13" height="30" fill="#d0d0d0" rx="1"/>
+<rect x="190" y="0" width="13" height="70" fill="#d0d0d0" rx="1"/>
+<rect x="204" y="17" width="13" height="53" fill="#d0d0d0" rx="1"/>
+<rect x="218" y="17" width="13" height="53" fill="#d0d0d0" rx="1"/>
+<rect x="231" y="33" width="13" height="37" fill="#d0d0d0" rx="1"/>
+<rect x="245" y="33" width="13" height="37" fill="#d0d0d0" rx="1"/>
+<rect x="258" y="51" width="13" height="19" fill="#d0d0d0" rx="1"/>
+<rect x="272" y="58" width="13" height="12" fill="#d0d0d0" rx="1"/>
+<rect x="286" y="64" width="13" height="6" fill="#d0d0d0" rx="1"/>
+<rect x="299" y="65" width="13" height="5" fill="#d0d0d0" rx="1"/>
+<rect x="313" y="68" width="13" height="2" fill="#d0d0d0" rx="1"/>
+<rect x="326" y="68" width="13" height="2" fill="#d0d0d0" rx="1"/>
+<line x1="9" y1="0" x2="9" y2="72" stroke="#c43c3c" stroke-width="2"/>
+<text x="9" y="84" text-anchor="middle" font-size="9" fill="#c43c3c" font-weight="600">実測</text>
+</svg></div>
+<div class="card"><div style="font-size:12px;font-weight:600;color:#7b5ea7;margin-bottom:4px;">naugara（z=-1.54）</div><svg viewBox="0 0 340 90" style="width:100%;max-width:340px;">
+<rect x="0" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="14" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="27" y="67" width="13" height="3" fill="#d0d0d0" rx="1"/>
+<rect x="41" y="65" width="13" height="5" fill="#d0d0d0" rx="1"/>
+<rect x="54" y="53" width="13" height="17" fill="#d0d0d0" rx="1"/>
+<rect x="68" y="62" width="13" height="8" fill="#d0d0d0" rx="1"/>
+<rect x="82" y="42" width="13" height="28" fill="#d0d0d0" rx="1"/>
+<rect x="95" y="53" width="13" height="17" fill="#d0d0d0" rx="1"/>
+<rect x="109" y="23" width="13" height="47" fill="#d0d0d0" rx="1"/>
+<rect x="122" y="33" width="13" height="37" fill="#d0d0d0" rx="1"/>
+<rect x="136" y="6" width="13" height="64" fill="#d0d0d0" rx="1"/>
+<rect x="150" y="35" width="13" height="35" fill="#d0d0d0" rx="1"/>
+<rect x="163" y="0" width="13" height="70" fill="#d0d0d0" rx="1"/>
+<rect x="177" y="37" width="13" height="33" fill="#d0d0d0" rx="1"/>
+<rect x="190" y="1" width="13" height="69" fill="#d0d0d0" rx="1"/>
+<rect x="204" y="43" width="13" height="27" fill="#d0d0d0" rx="1"/>
+<rect x="218" y="21" width="13" height="49" fill="#d0d0d0" rx="1"/>
+<rect x="231" y="55" width="13" height="15" fill="#d0d0d0" rx="1"/>
+<rect x="245" y="45" width="13" height="25" fill="#d0d0d0" rx="1"/>
+<rect x="258" y="63" width="13" height="7" fill="#d0d0d0" rx="1"/>
+<rect x="272" y="64" width="13" height="6" fill="#d0d0d0" rx="1"/>
+<rect x="286" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="299" y="67" width="13" height="3" fill="#d0d0d0" rx="1"/>
+<rect x="313" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<rect x="326" y="70" width="13" height="0" fill="#d0d0d0" rx="1"/>
+<line x1="83" y1="0" x2="83" y2="72" stroke="#7b5ea7" stroke-width="2"/>
+<text x="83" y="84" text-anchor="middle" font-size="9" fill="#7b5ea7" font-weight="600">実測</text>
+</svg></div>
+</div>
+<div class="kf kf-red">
+<strong>mmja のみ有意な位置規則性</strong>（z=−5.44, p&lt;.0001）。unu・naugara はいずれも n.s.。
+</div>
+
+<h3>1.2 unu が n.s. である理由</h3>
+<p>unu は直後に N が 45% と強い文脈選好を示すが（§2 参照）、圧縮検定では非有意である。これは「POS 文脈の偏り」と「文内位置の規則性」が異なる性質だからである。</p>
+
+<table>
+<tr><th>要因</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">mmja</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">unu</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">naugara</th></tr>
+<tr><td>n</td><td class="r">170</td><td class="r">40</td><td class="r">23</td></tr>
+<tr><td>|Δ|（圧縮差 bytes）</td><td class="r">67.8</td><td class="r">8.5</td><td class="r">9.0</td></tr>
+<tr><td>per-token |Δ/n|</td><td class="r">0.399</td><td class="r">0.212</td><td class="r">0.391</td></tr>
+<tr><td>σ<sub>shuf</sub></td><td class="r">12.45</td><td class="r">7.10</td><td class="r">5.83</td></tr>
+<tr><td>|Δ|/σ = |z|</td><td class="r" style="font-weight:700;color:var(--red);">5.44</td><td class="r">1.20</td><td class="r">1.54</td></tr>
+</table>
+
+<p>unu の per-token 効果量は mmja の 53% あり、効果自体はゼロではない。しかし n=40 では絶対的な圧縮差 |Δ|=8.5 bytes がシャッフルノイズ σ=7.1 に埋もれる。仮に unu が n=170 あれば projected z ≈ −2.5 となり、補正前有意水準に近づく。</p>
+
+<div class="kf kf-blu">
+<strong>「文脈選好」と「位置規則性」は別。</strong>unu の「直後 N=45%」は POS 文脈の偏りであり、文の前半でも後半でも N の前に unu が出るなら同じ文脈になる。圧縮検定が測るのは「POS 列のどの位置に <code>TGT_</code> が嵌まるか」のパターンであり、文脈の偏りとは独立。なお unu はサプライザル（§4）では有意（d=+0.46, p=.0005）であり、「どこに出るか」は不明瞭でも「出た後に情報量の高い語が来る」ことは確認される。
+</div>
+</section>
+<section id="s2">
+<h2><span class="n">2.</span> 語レベル隣接環境</h2>
+<h3><span class="m mm">mmja</span>（n=170）</h3>
+<div class="grid2">
+<div><table><tr><th>直前</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">%</th></tr>
+<tr><td><code>ISP</code></td><td class="r">37</td><td class="r">22%</td></tr>
+<tr><td><code>V</code></td><td class="r">36</td><td class="r">21%</td></tr>
+<tr><td><code>CP</code></td><td class="r">11</td><td class="r">6%</td></tr>
+<tr><td><code>CONJ</code></td><td class="r">10</td><td class="r">6%</td></tr>
+<tr><td><code>SFP</code></td><td class="r">6</td><td class="r">4%</td></tr>
+<tr><td><code>N</code></td><td class="r">5</td><td class="r">3%</td></tr>
+</table></div>
+<div><table><tr><th>直後</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">%</th></tr>
+<tr><td><code>N</code></td><td class="r">42</td><td class="r">25%</td></tr>
+<tr><td><code>V</code></td><td class="r">39</td><td class="r">23%</td></tr>
+<tr><td><code>PRN</code></td><td class="r">18</td><td class="r">11%</td></tr>
+<tr><td><code>INTJ</code></td><td class="r">17</td><td class="r">10%</td></tr>
+<tr><td><code>ADJ</code></td><td class="r">9</td><td class="r">5%</td></tr>
+<tr><td><code>ADV</code></td><td class="r">5</td><td class="r">3%</td></tr>
+</table></div></div>
+<h3><span class="m mu">unu</span>（n=40）</h3>
+<div class="grid2">
+<div><table><tr><th>直前</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">%</th></tr>
+<tr><td><code>INTJ</code></td><td class="r">9</td><td class="r">22%</td></tr>
+<tr><td><code>CP</code></td><td class="r">3</td><td class="r">8%</td></tr>
+<tr><td><code>CONJ</code></td><td class="r">3</td><td class="r">8%</td></tr>
+<tr><td><code>V</code></td><td class="r">3</td><td class="r">8%</td></tr>
+<tr><td><code>ISP</code></td><td class="r">2</td><td class="r">5%</td></tr>
+<tr><td><code>SFP</code></td><td class="r">2</td><td class="r">5%</td></tr>
+</table></div>
+<div><table><tr><th>直後</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">%</th></tr>
+<tr><td><code>N</code></td><td class="r">18</td><td class="r">45%</td></tr>
+<tr><td><code>INTJ</code></td><td class="r">8</td><td class="r">20%</td></tr>
+<tr><td><code>V</code></td><td class="r">6</td><td class="r">15%</td></tr>
+<tr><td><code>PN</code></td><td class="r">4</td><td class="r">10%</td></tr>
+<tr><td><code>ADJ</code></td><td class="r">2</td><td class="r">5%</td></tr>
+<tr><td><code>ADV</code></td><td class="r">1</td><td class="r">2%</td></tr>
+</table></div></div>
+<h3><span class="m mn">naugara</span>（n=23）</h3>
+<div class="grid2">
+<div><table><tr><th>直前</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">%</th></tr>
+<tr><td><code>INTJ</code></td><td class="r">8</td><td class="r">35%</td></tr>
+<tr><td><code>CP</code></td><td class="r">4</td><td class="r">17%</td></tr>
+<tr><td><code>ISP</code></td><td class="r">3</td><td class="r">13%</td></tr>
+</table></div>
+<div><table><tr><th>直後</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">%</th></tr>
+<tr><td><code>N</code></td><td class="r">8</td><td class="r">35%</td></tr>
+<tr><td><code>V</code></td><td class="r">4</td><td class="r">17%</td></tr>
+<tr><td><code>INTJ</code></td><td class="r">3</td><td class="r">13%</td></tr>
+<tr><td><code>SFP</code></td><td class="r">3</td><td class="r">13%</td></tr>
+<tr><td><code>ADJ</code></td><td class="r">2</td><td class="r">9%</td></tr>
+<tr><td><code>PRN</code></td><td class="r">2</td><td class="r">9%</td></tr>
+</table></div></div>
+</section>
+<section id="s3">
+<h2><span class="n">3.</span> 交替分析</h2>
+<table><tr><th>指標</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">値</th></tr>
+<tr><td>mmja 互換スロット総数</td><td class="r">1,629</td></tr>
+<tr><td>mmja 充填率</td><td class="r">170/1,629 = 10.4%</td></tr>
+</table>
+<h3>頻出スロットキー</h3>
+<table><tr><th>直前 | 直後</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th></tr>
+<tr><td><code>V</code> → <span class="m mm">mmja</span> → <code>EOS</code></td><td class="r">21</td></tr>
+<tr><td><code>BOS</code> → <span class="m mm">mmja</span> → <code>N</code></td><td class="r">19</td></tr>
+<tr><td><code>ISP</code> → <span class="m mm">mmja</span> → <code>V</code></td><td class="r">13</td></tr>
+<tr><td><code>BOS</code> → <span class="m mm">mmja</span> → <code>V</code></td><td class="r">8</td></tr>
+<tr><td><code>ISP</code> → <span class="m mm">mmja</span> → <code>N</code></td><td class="r">7</td></tr>
+<tr><td><code>CP</code> → <span class="m mm">mmja</span> → <code>V</code></td><td class="r">7</td></tr>
+<tr><td><code>BOS</code> → <span class="m mm">mmja</span> → <code>PRN</code></td><td class="r">7</td></tr>
+<tr><td><code>BOS</code> → <span class="m mm">mmja</span> → <code>INTJ</code></td><td class="r">6</td></tr>
+</table></section>
+<section id="s4">
+<h2><span class="n">4.</span> サプライザル</h2>
+<p>語レベル bigram（節境界リセット、Add-α）。S̄<sub>corpus</sub> = 5.08 bits。Bonferroni 補正 ×3。</p>
+<h3>4.1 前後サプライザル</h3>
+<table><tr><th>形式</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">pre S̄</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">self S̄</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">post S̄</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">d</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">p (Bonf.)</th></tr>
+<tr class="hl"><td><span class="m mm">mmja</span></td><td class="r">4.88</td><td class="r">3.92</td><td class="r" style="color:var(--red);font-weight:700;">6.69</td><td class="r">+0.99</td><td class="r">&lt;.0001</td></tr>
+<tr class="hb"><td><span class="m mu">unu</span></td><td class="r">4.42</td><td class="r">4.73</td><td class="r">5.83</td><td class="r">+0.46</td><td class="r">.0005</td></tr>
+<tr class="hp"><td><span class="m mn">naugara</span></td><td class="r">3.71</td><td class="r">6.02</td><td class="r">4.85</td><td class="r">-0.15</td><td class="r">1.00</td></tr>
+</table>
+<h3>4.2 ペアワイズ比較（post S̄）</h3>
+<table><tr><th>比較</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">差</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">Cohen's d</th></tr>
+<tr><td>mmja − unu</td><td class="r">+0.86</td><td class="r">+1.03</td></tr>
+<tr><td>mmja − naugara</td><td class="r">+1.84</td><td class="r">+2.27</td></tr>
+<tr><td>unu − naugara</td><td class="r">+0.98</td><td class="r">+1.36</td></tr>
+</table>
+<h3>4.3 オフセットプロファイル</h3>
+<div class="card" style="max-width:400px;">
+<div style="display:flex;gap:12px;font-size:11px;margin-bottom:4px;">
+<span style="color:#c43c3c;">● mmja</span><span style="color:#1e4a7a;">● unu</span><span style="color:#7b5ea7;">● naugara</span><span style="color:#999;">-- S̄</span></div>
+<svg viewBox="0 0 320 120" style="width:100%;max-width:320px;">
+<line x1="30" y1="54" x2="310" y2="54" stroke="#999" stroke-dasharray="3,3"/>
+<text x="27" y="57" text-anchor="end" font-size="8" fill="#999">S̄=5.1</text>
+<text x="30" y="116" text-anchor="middle" font-size="8" fill="#888">-3</text>
+<text x="86" y="116" text-anchor="middle" font-size="8" fill="#888">-2</text>
+<text x="142" y="116" text-anchor="middle" font-size="8" fill="#888">-1</text>
+<text x="198" y="116" text-anchor="middle" font-size="8" fill="#888">+0</text>
+<text x="254" y="116" text-anchor="middle" font-size="8" fill="#888">+1</text>
+<text x="310" y="116" text-anchor="middle" font-size="8" fill="#888">+2</text>
+<path d="M30,45 L86,53 L142,59 L198,79 L254,20 L310,83" fill="none" stroke="#c43c3c" stroke-width="1.5"/>
+<circle cx="30" cy="45" r="3" fill="#c43c3c"/>
+<circle cx="86" cy="53" r="3" fill="#c43c3c"/>
+<circle cx="142" cy="59" r="3" fill="#c43c3c"/>
+<circle cx="198" cy="79" r="3" fill="#c43c3c"/>
+<circle cx="254" cy="20" r="3" fill="#c43c3c"/>
+<circle cx="310" cy="83" r="3" fill="#c43c3c"/>
+<path d="M30,36 L86,59 L142,68 L198,62 L254,39 L310,81" fill="none" stroke="#1e4a7a" stroke-width="1.5"/>
+<circle cx="30" cy="36" r="3" fill="#1e4a7a"/>
+<circle cx="86" cy="59" r="3" fill="#1e4a7a"/>
+<circle cx="142" cy="68" r="3" fill="#1e4a7a"/>
+<circle cx="198" cy="62" r="3" fill="#1e4a7a"/>
+<circle cx="254" cy="39" r="3" fill="#1e4a7a"/>
+<circle cx="310" cy="81" r="3" fill="#1e4a7a"/>
+<path d="M30,35 L86,50 L142,83 L198,35 L254,59 L310,88" fill="none" stroke="#7b5ea7" stroke-width="1.5"/>
+<circle cx="30" cy="35" r="3" fill="#7b5ea7"/>
+<circle cx="86" cy="50" r="3" fill="#7b5ea7"/>
+<circle cx="142" cy="83" r="3" fill="#7b5ea7"/>
+<circle cx="198" cy="35" r="3" fill="#7b5ea7"/>
+<circle cx="254" cy="59" r="3" fill="#7b5ea7"/>
+<circle cx="310" cy="88" r="3" fill="#7b5ea7"/>
+</svg>
+</div>
+<div class="kf kf-red">
+<strong>mmja は低→高密度の遷移点</strong>: post S̄=6.69（d=+0.99）。naugara は post ≈ コーパス平均。勾配: mmja &gt; unu &gt; naugara。
+</div></section>
+<section id="s5">
+<h2><span class="n">5.</span> 文内位置分布</h2>
+<table><tr><th>ターゲット</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">n</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">H (bits)</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">H′</th></tr>
+<tr><td><span class="m mm">mmja</span></td><td class="r">170</td><td class="r">3.287</td><td class="r">0.990</td></tr>
+<tr><td><span class="m mu">unu</span></td><td class="r">40</td><td class="r">2.950</td><td class="r">0.888</td></tr>
+<tr><td><span class="m mn">naugara</span></td><td class="r">22</td><td class="r">2.924</td><td class="r">0.880</td></tr>
+<tr><td style="color:#78a050;">SFP（対比用）</td><td class="r">235</td><td class="r">1.796</td><td class="r">0.541</td></tr>
+<tr><td>全語</td><td class="r">4674</td><td class="r">3.286</td><td class="r">0.989</td></tr>
+</table>
+<div class="card" style="max-width:400px;">
+<div style="display:flex;gap:12px;font-size:11px;margin-bottom:4px;">
+<span style="color:#c43c3c;">■ mmja</span><span style="color:#1e4a7a;">■ unu</span><span style="color:#7b5ea7;">■ naugara</span><span style="color:#78a050;">■ SFP</span></div>
+<svg viewBox="0 0 340 80" style="width:100%;max-width:340px;">
+<rect x="4" y="64.9" width="7" height="1.1" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="12" y="53.4" width="7" height="12.6" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="20" y="41.2" width="7" height="24.8" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<rect x="28" y="58.5" width="7" height="7.5" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="20" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.0</text>
+<rect x="36" y="63.5" width="7" height="2.5" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="44" y="58.2" width="7" height="7.8" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="52" y="55.7" width="7" height="10.3" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<rect x="60" y="43.5" width="7" height="22.5" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="52" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.1</text>
+<rect x="68" y="62.5" width="7" height="3.5" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="76" y="58.7" width="7" height="7.3" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="84" y="59.8" width="7" height="6.2" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<rect x="92" y="54.7" width="7" height="11.3" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="84" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.2</text>
+<rect x="100" y="62.8" width="7" height="3.2" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="108" y="56.8" width="7" height="9.2" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="116" y="57.7" width="7" height="8.3" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<text x="116" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.3</text>
+<rect x="132" y="63.2" width="7" height="2.8" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="140" y="56.8" width="7" height="9.2" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="148" y="61.9" width="7" height="4.1" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<rect x="156" y="58.5" width="7" height="7.5" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="148" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.4</text>
+<rect x="164" y="63.2" width="7" height="2.8" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="172" y="58.7" width="7" height="7.3" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="180" y="57.7" width="7" height="8.3" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<rect x="188" y="62.2" width="7" height="3.8" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="180" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.5</text>
+<rect x="196" y="61.4" width="7" height="4.6" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="204" y="57.2" width="7" height="8.8" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="212" y="57.7" width="7" height="8.3" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<rect x="220" y="62.2" width="7" height="3.8" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="212" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.6</text>
+<rect x="228" y="64.2" width="7" height="1.8" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="236" y="59.2" width="7" height="6.8" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="244" y="59.8" width="7" height="6.2" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<rect x="252" y="54.7" width="7" height="11.3" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="244" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.7</text>
+<rect x="260" y="63.5" width="7" height="2.5" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="268" y="57.7" width="7" height="8.3" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="276" y="59.8" width="7" height="6.2" fill="#1e4a7a" rx="1" opacity="0.7"/>
+<rect x="284" y="62.2" width="7" height="3.8" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="276" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.8</text>
+<rect x="292" y="8.0" width="7" height="58.0" fill="#78a050" rx="1" opacity="0.3"/>
+<rect x="300" y="60.7" width="7" height="5.3" fill="#c43c3c" rx="1" opacity="0.7"/>
+<rect x="316" y="54.7" width="7" height="11.3" fill="#7b5ea7" rx="1" opacity="0.7"/>
+<text x="308" y="78" text-anchor="middle" font-size="6.5" fill="#888">0.9</text>
+</svg></div></section>
+<section id="s6">
+<h2><span class="n">6.</span> 文レベル相関</h2>
+<table><tr><th>特徴量</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">ρ</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;">p</th></tr>
+<tr><td>文長(語数)</td><td class="r" style="font-weight:600;">+0.484</td><td class="r">0.0000</td></tr>
+<tr><td>節数</td><td class="r" style="font-weight:600;">+0.435</td><td class="r">0.0000</td></tr>
+<tr><td>平均S</td><td class="r">+0.016</td><td class="r">0.7388</td></tr>
+</table></section>
+<section id="s7">
+<h2><span class="n">7.</span> 連鎖構造</h2>
+<table>
+<tr><td><span class="m mm">mmja</span> → <span class="m mu">unu</span></td><td class="r">10/40 = 25%</td></tr>
+<tr><td><span class="m mm">mmja</span>/<span class="m mu">unu</span> → <span class="m mn">naugara</span></td><td class="r">7/23 = 30%</td></tr>
+</table></section>
+<section id="s8">
+<h2><span class="n">8.</span> 総合所見</h2>
+<table>
+<tr><th>指標</th><th style="text-align:right;font-family:'JetBrains Mono',monospace;"><span class="m mm">mmja</span></th><th style="text-align:right;font-family:'JetBrains Mono',monospace;"><span class="m mu">unu</span></th><th style="text-align:right;font-family:'JetBrains Mono',monospace;"><span class="m mn">naugara</span></th></tr>
+<tr><td>uniform z (Bonf.)</td><td class="r" style="font-weight:700;color:var(--red);">-5.44***</td><td class="r">-1.20 n.s.</td><td class="r">-1.54 n.s.</td></tr>
+<tr><td>post S̄</td><td class="r" style="font-weight:700;color:var(--red);">6.69</td><td class="r">5.83</td><td class="r">4.85</td></tr>
+<tr><td>d (post)</td><td class="r" style="font-weight:700;">+0.99</td><td class="r">+0.46</td><td class="r">-0.15</td></tr>
+<tr><td>機能</td><td>遷移標示</td><td>語彙検索</td><td>時間稼ぎ</td></tr>
+</table>
+<div class="kf kf-gld">
+<strong>mmja は uniform で z=-5.44***（p&lt;.0001）と唯一有意な位置規則性。</strong>後続サプライザル d=+0.99*** も突出。unu・naugara は位置規則性なし・情報密度効果も弱い。三形式は「フィラー」として一括できない。
+</div></section>
+
+<footer style="margin-top:40px;padding-top:16px;border-top:1px solid var(--bdr);font-size:11px;color:var(--muted);">
+データ: <code>combined_gold_nagahama.json</code> v4。4,746 語。圧縮: gzip N=500, Bonferroni k=3。サプライザル: 語 bigram Add-α, Bonferroni ×3。
+</footer></body></html>
