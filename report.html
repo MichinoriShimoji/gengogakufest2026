@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mmja / unu / naugara — 最終レポート</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#faf8f4;--bg2:#f0ede6;--bg3:#e8e4dc;--fg:#2a2622;--dim:#7a756c;--muted:#a09888;--red:#c03828;--red-bg:#fdf5f4;--blu:#2860a8;--blu-bg:#f4f7fd;--pur:#6838a0;--pur-bg:#f8f4fd;--gold:#b08018;--bdr:#d8d0c4;--serif:'Crimson Pro','Noto Sans JP',serif;--mono:'IBM Plex Mono',monospace;--sans:'Noto Sans JP',sans-serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--serif);background:var(--bg);color:var(--fg);line-height:1.8;font-size:17px}
+  .page{max-width:780px;margin:0 auto;padding:60px 40px 80px}
+  .title-block{border-bottom:3px solid var(--fg);padding-bottom:28px;margin-bottom:48px}
+  .title-block h1{font-family:var(--sans);font-size:28px;font-weight:700;line-height:1.35;letter-spacing:-0.5px;margin-bottom:8px}
+  .mmja{color:var(--red)}.unu{color:var(--blu)}.nau{color:var(--pur)}
+  .title-sub{font-family:var(--serif);font-size:18px;font-style:italic;color:var(--dim);margin-bottom:12px}
+  .title-meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  h2{font-family:var(--sans);font-size:20px;font-weight:700;margin:48px 0 16px;padding-bottom:6px;border-bottom:1.5px solid var(--bdr)}
+  h2 .n{color:var(--gold);margin-right:6px}
+  h3{font-family:var(--sans);font-size:16px;font-weight:600;margin:28px 0 10px;color:#4a4640}
+  p{margin-bottom:14px;text-align:justify}p+p{text-indent:1em}
+  strong{font-weight:600}code{font-family:var(--mono);font-size:14px}
+  .m{font-family:var(--mono);font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:16px 0 8px;font-size:15px}
+  th{font-family:var(--sans);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);padding:8px 12px;border-bottom:2px solid var(--bdr);text-align:left}
+  th.r{text-align:right}
+  td{padding:6px 12px;border-bottom:1px solid var(--bg3);font-family:var(--mono);font-size:14px}
+  td.r{text-align:right}td.l{font-family:var(--serif);font-size:15px}
+  tr:hover{background:rgba(176,128,24,.04)}
+  .cap{font-size:13px;color:var(--dim);font-style:italic;margin:4px 0 24px;line-height:1.5}
+  tr.hl td{background:rgba(192,56,40,.04)}
+  .box{border-left:4px solid var(--gold);padding:16px 20px;margin:20px 0;border-radius:0 6px 6px 0}
+  .box.red{border-left-color:var(--red);background:var(--red-bg)}
+  .box.blu{border-left-color:var(--blu);background:var(--blu-bg)}
+  .box.pur{border-left-color:var(--pur);background:var(--pur-bg)}
+  .box .lab{font-family:var(--sans);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+  .formula{text-align:center;margin:20px 0;padding:14px;font-family:var(--mono);font-size:15px;background:var(--bg2);border-radius:6px}
+  @media print{.page{max-width:none;padding:40px}h2{break-after:avoid}table{break-inside:avoid}}
+  @media(max-width:600px){.page{padding:24px 16px}.title-block h1{font-size:22px}table{font-size:13px}td,th{padding:4px 6px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="title-block">
+  <h1>宮古語伊良部島方言の <span class="mmja">mmja</span> / <span class="unu">unu</span> / <span class="nau">naugara</span> は同じ「フィラー」か？</h1>
+  <div class="title-sub">情報理論的指標によるフィラー三形式の機能分化の検証</div>
+  <div class="title-meta">下地理影 ── 最終レポート</div>
+</div>
+
+<h2><span class="n">1.</span> 背景と目的</h2>
+<p>宮古語伊良部島方言には、いずれもフィラー（FIL）とタグされる三つの形式——<span class="m mmja">mmja</span>、<span class="m unu">unu</span>、<span class="m nau">naugara</span>——が存在する。既存のコーパスアノテーションでは同一カテゴリに分類されているが、話者の直観としては機能的に異なるという「エセ内省」がある（下地 2018）。</p>
+<p>しかし「ここで mmja は変ですか？」のような内省判断の引き出しは困難であり、従来の記述的手法では検証が難しい。そこで本研究では、内省に依存しない情報理論的指標——サプライザルと圧縮シャッフル検定——を用いて、三形式の機能分化を定量的に検証する。</p>
+
+<h2><span class="n">2.</span> データ</h2>
+<p>伊良部島方言の自然調話コーパス（774発話）を使用。形態素レベルのアノテーションを <code>word_unit_id</code> で語レベルに折り畳み（v4 規則）、節境界（EOS / EAC / EQC / Q）の情報を保持した。</p>
+<table><tbody>
+  <tr><td class="r" style="font-weight:600">497</td><td class="l">文（sentence_id）</td></tr>
+  <tr><td class="r" style="font-weight:600">4,681</td><td class="l">語トークン</td></tr>
+  <tr><td class="r" style="font-weight:600">883</td><td class="l">語彙タイプ (V)</td></tr>
+  <tr><td class="r" style="font-weight:600">28</td><td class="l">品詞タイプ (word_pos)</td></tr>
+</tbody></table>
+<div class="cap">コーパス概要</div>
+<p>三形式の出現頻度:</p>
+<table>
+  <thead><tr><th>形式</th><th class="r">n</th><th>タグ</th></tr></thead>
+  <tbody>
+    <tr><td><span class="m mmja">mmja</span></td><td class="r">168</td><td class="l">INTJ / FIL</td></tr>
+    <tr><td><span class="m unu">unu</span></td><td class="r">39</td><td class="l">INTJ / FIL</td></tr>
+    <tr><td><span class="m nau">naugara</span></td><td class="r">22</td><td class="l">INTJ / FIL</td></tr>
+  </tbody>
+</table>
+<div class="cap">三形式の出現頻度。naugara には nautiga を含む。</div>
+
+<h2><span class="n">3.</span> 方法</h2>
+
+<h3>3.1 バイグラム・サプライザル</h3>
+<p>コーパス全体から add-α smoothing（α = 0.01）付きバイグラムモデルを構築し、各位置のサプライザルを計算した。</p>
+<div class="formula">S(w<sub>i</sub> | w<sub>i−1</sub>) = −log₂ P(w<sub>i</sub> | w<sub>i−1</sub>)<br>P(w | c) = (count(c, w) + α) / (count(c) + αV)</div>
+<p>節境界（EOS / EAC / EQC / Q）では文脈を &lt;BOS&gt; にリセットした。ターゲット語の各出現について、直前（pre）・自身（self）・直後（post）のサプライザルを収集し、コーパス平均 S̄ = 4.95 bits との差を Cohen's d および Wilcoxon signed-rank test（Bonferroni k=3 補正）で評価した。</p>
+
+<h3>3.2 圧縮シャッフル検定</h3>
+<p>ターゲット語の文内位置に規則性（パターン）があるかを gzip 圧縮率で検証した。対象形式の文内位置を一様ランダム（uniform）に並べ替え 500 回、gzip 圧縮サイズを比較した。元データが有意に小さければ、位置にパターン（規則性）がある——すなわちターゲット語が特定の POS 文脈に偏って出現していることを意味する。Bonferroni 補正（k=3）適用。</p>
+
+<h2><span class="n">4.</span> 結果</h2>
+
+<h3>4.1 サプライザル分析</h3>
+<p>コーパス全体の平均サプライザルは S̄ = 4.95 bits（SD = 2.30）。各形式の結果を表 1 に示す。</p>
+<table>
+  <thead><tr><th>形式</th><th class="r">n</th><th class="r">pre S̄</th><th class="r">self S̄</th><th class="r">post S̄</th><th class="r">d</th><th class="r">p (Bonf)</th><th class="r">n₁</th></tr></thead>
+  <tbody>
+    <tr class="hl"><td><span class="m mmja">mmja</span></td><td class="r">168</td><td class="r">4.66</td><td class="r">4.00</td><td class="r" style="font-weight:600;color:var(--red)">6.79</td><td class="r" style="font-weight:600">+0.80</td><td class="r">&lt;.0001</td><td class="r">164</td></tr>
+    <tr><td><span class="m unu">unu</span></td><td class="r">39</td><td class="r">4.65</td><td class="r">4.91</td><td class="r">5.63</td><td class="r">+0.29</td><td class="r">&lt;.0001</td><td class="r">39</td></tr>
+    <tr><td><span class="m nau">naugara</span></td><td class="r">22</td><td class="r">3.68</td><td class="r">6.17</td><td class="r">4.61</td><td class="r">−0.15</td><td class="r">&lt;.0001</td><td class="r">22</td></tr>
+  </tbody>
+</table>
+<div class="cap">表 1: サプライザル分析結果。d = Cohen's d（post vs corpus mean）。p = Wilcoxon（Bonferroni k=3）。n₁ = post の有効サンプル数。</div>
+
+<!-- SVG chart -->
+<div style="margin:24px 0">
+  <h3 style="font-size:13px;color:var(--dim);margin-bottom:8px">図 1: オフセット別サプライザルプロファイル</h3>
+  <svg viewBox="0 0 700 220" style="width:100%;max-width:700px">
+    <g stroke="#eceae5" stroke-width=".5"><line x1="60" y1="64" x2="640" y2="64"/><line x1="60" y1="108" x2="640" y2="108"/><line x1="60" y1="152" x2="640" y2="152"/></g>
+    <line x1="60" y1="196" x2="640" y2="196" stroke="#bbb"/><line x1="60" y1="20" x2="60" y2="196" stroke="#bbb"/>
+    <text x="54" y="200" text-anchor="end" fill="#999" font-size="11" font-family="IBM Plex Mono">3</text>
+    <text x="54" y="156" text-anchor="end" fill="#999" font-size="11" font-family="IBM Plex Mono">5</text>
+    <text x="54" y="112" text-anchor="end" fill="#999" font-size="11" font-family="IBM Plex Mono">7</text>
+    <line x1="60" y1="153" x2="640" y2="153" stroke="#b08018" stroke-dasharray="5,3"/>
+    <text x="644" y="157" fill="#b08018" font-size="10" font-family="IBM Plex Mono">S̄=4.95</text>
+    <g fill="#999" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">
+      <text x="113" y="212">−5</text><text x="166" y="212">−4</text><text x="219" y="212">−3</text><text x="272" y="212">−2</text><text x="325" y="212">pre</text><text x="378" y="212">self</text><text x="431" y="212">post</text><text x="484" y="212">+2</text><text x="537" y="212">+3</text><text x="590" y="212">+4</text>
+    </g>
+    <polyline points="113,161 166,142 219,148 272,150 325,160 378,174 431,113 484,179 537,149 590,157" fill="none" stroke="#c03828" stroke-width="2.5" stroke-linejoin="round"/>
+    <polyline points="113,137 166,155 219,134 272,156 325,159 378,154 431,138 484,181 537,168 590,164" fill="none" stroke="#2860a8" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6,3"/>
+    <polyline points="113,121 166,128 219,147 272,146 325,181 378,126 431,161 484,188 537,149 590,152" fill="none" stroke="#6838a0" stroke-width="2" stroke-linejoin="round" stroke-dasharray="2,3"/>
+    <circle cx="378" cy="174" r="4.5" fill="#c03828"/><circle cx="431" cy="113" r="4.5" fill="#c03828"/>
+    <text x="431" y="105" text-anchor="middle" fill="#c03828" font-size="11" font-weight="600" font-family="IBM Plex Mono">6.79</text>
+    <text x="378" y="185" text-anchor="middle" fill="#c03828" font-size="10" font-family="IBM Plex Mono">4.00</text>
+    <line x1="80" y1="30" x2="100" y2="30" stroke="#c03828" stroke-width="2.5"/><text x="104" y="34" fill="#c03828" font-size="11" font-family="Noto Sans JP">mmja</text>
+    <line x1="150" y1="30" x2="170" y2="30" stroke="#2860a8" stroke-width="2" stroke-dasharray="6,3"/><text x="174" y="34" fill="#2860a8" font-size="11" font-family="Noto Sans JP">unu</text>
+    <line x1="210" y1="30" x2="230" y2="30" stroke="#6838a0" stroke-width="2" stroke-dasharray="2,3"/><text x="234" y="34" fill="#6838a0" font-size="11" font-family="Noto Sans JP">naugara</text>
+  </svg>
+</div>
+<div class="cap">図 1: 三形式のオフセット別サプライザル。mmja は post (+1) で急騰する「谷→山」型。naugara は逆に self で高く post で低い。</div>
+
+<div class="box red">
+  <div class="lab" style="color:var(--red)">mmja — 談話標識（負荷アラート）</div>
+  <p style="margin:0">post S̄ = 6.79（d = +0.80, p &lt; .0001）。直後に N (49), V (43), PRN (22) など多岐な内容語が来る。情報密度の低→高遷移点を標示し、「これから難しい内容が来る」と聴き手に予告する。圧縮シャッフル検定でも唯一有意（位置規則性あり）。</p>
+</div>
+<div class="box blu">
+  <div class="lab" style="color:var(--blu)">unu — フィラー（語彙検索ポーズ）</div>
+  <p style="margin:0">post S̄ = 5.63（d = +0.29, p &lt; .0001）。平均より有意に高いが mmja ほどではない。後続語は名詞に集中（45%）。圧縮シャッフル検定では有意でなく、位置に規則性が見られない。</p>
+</div>
+<div class="box pur">
+  <div class="lab" style="color:var(--pur)">naugara — フィラー（アラート解除？）</div>
+  <p style="margin:0">post S̄ = 4.61（d = −0.15, p &lt; .0001）。mmja とは逆に予測容易な語が後続する。「アラート解除」的な機能の可能性があるが、n = 22 では確定的な解釈は困難。追加データが必要。</p>
+</div>
+
+<h3>4.2 圧縮シャッフル検定</h3>
+<table>
+  <thead><tr><th>形式</th><th class="r">z</th><th class="r">|Δ/n|</th><th class="r">p</th></tr></thead>
+  <tbody>
+    <tr class="hl"><td><span class="m mmja">mmja</span></td><td class="r">−5.44</td><td class="r">0.57</td><td class="r">&lt;.0001</td></tr>
+    <tr><td><span class="m unu">unu</span></td><td class="r">−1.20</td><td class="r">0.21</td><td class="r">n.s.</td></tr>
+    <tr><td><span class="m nau">naugara</span></td><td class="r">−1.54</td><td class="r">0.39</td><td class="r">n.s.</td></tr>
+  </tbody>
+</table>
+<div class="cap">表 2: 圧縮シャッフル検定（uniform shuffle ×500, Bonferroni k=3）。|Δ/n| = 1トークンあたりの圧縮効果 (bytes)。</div>
+<p><span class="m mmja">mmja</span> のみが有意（z = −5.44, p &lt; .0001）。mmja の文内位置を一様ランダムに並べ替えると圧縮サイズが有意に増大する。すなわち mmja は特定の POS 文脈に偏って出現しており、その配置に規則性がある。unu・naugara は有意でない。</p>
+
+<h2><span class="n">5.</span> 考察</h2>
+<h3>5.1 三形式の機能分化</h3>
+<p>サプライザル分析と圧縮シャッフル検定の両方から、三形式の機能的差異が確認された。</p>
+<p><span class="m mmja">mmja</span> は単なるフィラーではなく、情報密度の遷移点を標示する<strong>談話標識</strong>である。直後に予測困難な内容語が来る（d = +0.80）こと、文内位置に規則性がある（圧縮シャッフル検定有意）ことの二点がこれを裏付ける。</p>
+<p><span class="m unu">unu</span> は後続語が名詞に集中し（45%）、サプライザル上昇も穏やか（d = +0.29）。語彙検索中のポーズとしての古典的<strong>フィラー</strong>機能に合致する。文内位置の規則性は検出されない。</p>
+<p><span class="m nau">naugara</span> は mmja と逆方向の効果を示す（d = −0.15）。予測容易な語が後続し、「<strong>アラート解除</strong>」的な機能の可能性があるが、n = 22 では確定的な解釈は困難であり、追加データが必要。</p>
+<h3>5.2 方法論的意義</h3>
+<p>本研究は、内省判断の引き出しが困難な危機言語において、コーパスの数え上げだけで機能の違いを検出できることを示した。サプライザルは話者への問い合わせを一切必要とせず、存在するコーパスだけで計算可能である。これは記述が不十分な他の危機言語にも適用可能な手法である。</p>
+
+<h2><span class="n">6.</span> 結論</h2>
+<p>宮古語伊良部島方言のフィラー三形式は、情報理論的指標によって明確に分化する。mmja は談話標識として情報密度の遷移点を標示し、unu は語彙検索ポーズとして機能し、naugara はアラート解除の可能性を示すが確定には追加データを要する。「同じフィラー」という従来の分類は再考が必要である。</p>
+
+<h2>参考文献</h2>
+<p>下地理影（2018）『南琉球宮古語伊良部島方言』くろしお出版.</p>
+
+</div>
+</body>
+</html>

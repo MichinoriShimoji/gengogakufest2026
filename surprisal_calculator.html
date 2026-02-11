@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surprisal Calculator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #1a1a1e; --bg2: #222226; --bg3: #2a2a30;
+    --fg: #e0ddd8; --dim: #888; --muted: #666;
+    --bdr: #3a3a40; --bdr2: #2e2e34;
+    --red: #e25850; --blu: #5b8def; --pur: #a577d0;
+    --grn: #6bc26b; --gld: #d4a830;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', 'IBM Plex Sans JP', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--sans); background: var(--bg); color: var(--fg);
+    line-height: 1.5; min-height: 100vh;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+
+  h1 {
+    font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  h1 span { color: var(--gld); }
+  .sub { color: var(--dim); font-size: 13px; margin-bottom: 24px; }
+
+  /* ── Upload Zone ── */
+  .upload-zone {
+    border: 2px dashed var(--bdr); border-radius: 10px;
+    padding: 40px 20px; text-align: center; cursor: pointer;
+    transition: all .2s; background: var(--bg2); margin-bottom: 20px;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--gld); background: rgba(212,168,48,.06);
+  }
+  .upload-zone .icon { font-size: 32px; margin-bottom: 8px; opacity: .7; }
+  .upload-zone p { color: var(--dim); font-size: 14px; }
+  .upload-zone p strong { color: var(--gld); }
+  .upload-zone input { display: none; }
+
+  /* ── Settings ── */
+  .settings {
+    display: flex; gap: 16px; flex-wrap: wrap; align-items: end;
+    margin-bottom: 20px;
+  }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 11px; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+  .field input, .field select {
+    font-family: var(--mono); font-size: 13px; padding: 6px 10px;
+    background: var(--bg3); border: 1px solid var(--bdr); border-radius: 5px;
+    color: var(--fg); outline: none; min-width: 100px;
+  }
+  .field input:focus { border-color: var(--gld); }
+
+  .btn {
+    font-family: var(--sans); font-size: 13px; font-weight: 600;
+    padding: 7px 20px; border: none; border-radius: 5px; cursor: pointer;
+    background: var(--gld); color: var(--bg); transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ── Status ── */
+  .status {
+    font-family: var(--mono); font-size: 12px; color: var(--dim);
+    padding: 8px 12px; background: var(--bg2); border-radius: 6px;
+    margin-bottom: 16px; display: none; border-left: 3px solid var(--gld);
+  }
+  .status.error { border-left-color: var(--red); color: var(--red); }
+  .status.ok { border-left-color: var(--grn); }
+
+  /* ── Results ── */
+  .results { display: none; }
+
+  .summary {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--bg2); border: 1px solid var(--bdr); border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .stat-card .label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .stat-card .value { font-family: var(--mono); font-size: 20px; font-weight: 600; }
+
+  .target-section { margin-bottom: 28px; }
+  .target-header {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--bdr);
+  }
+  .target-name { font-size: 18px; font-weight: 700; }
+  .target-meta { font-size: 12px; color: var(--dim); font-family: var(--mono); }
+
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    margin-bottom: 8px;
+  }
+  th {
+    text-align: left; font-size: 11px; color: var(--dim);
+    text-transform: uppercase; letter-spacing: .5px;
+    padding: 6px 10px; border-bottom: 1px solid var(--bdr);
+    font-weight: 600;
+  }
+  th.r, td.r { text-align: right; }
+  td {
+    padding: 5px 10px; font-family: var(--mono); font-size: 12px;
+    border-bottom: 1px solid var(--bdr2);
+  }
+  tr.hl { background: rgba(226,88,80,.08); }
+  tr.hl td:first-child { font-weight: 600; color: var(--red); }
+  tr:hover { background: rgba(255,255,255,.03); }
+
+  .sig { color: var(--grn); font-weight: 600; }
+  .ns { color: var(--muted); }
+  .pos { color: var(--red); }
+  .neg { color: var(--blu); }
+
+  /* ── Chart ── */
+  .chart-wrap {
+    background: var(--bg2); border: 1px solid var(--bdr); border-radius: 8px;
+    padding: 16px; margin-top: 12px;
+  }
+  .chart-wrap h3 { font-size: 13px; color: var(--dim); margin-bottom: 12px; }
+
+  /* ── Footer ── */
+  .methodology {
+    margin-top: 32px; padding: 16px; background: var(--bg2);
+    border: 1px solid var(--bdr); border-radius: 8px; font-size: 12px;
+    color: var(--dim); line-height: 1.7;
+  }
+  .methodology h3 { font-size: 13px; color: var(--fg); margin-bottom: 8px; }
+  .methodology code { font-family: var(--mono); color: var(--gld); font-size: 11px; }
+
+  @media (max-width: 600px) {
+    .summary { grid-template-columns: 1fr 1fr; }
+    .settings { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Bigram <span>Surprisal</span> Calculator</h1>
+  <p class="sub">final.json をアップロード → バイグラム・サプライザルを計算</p>
+
+  <!-- Upload -->
+  <div class="upload-zone" id="dropZone">
+    <div class="icon">📂</div>
+    <p><strong>final.json をドロップ</strong>　またはクリックして選択</p>
+    <input type="file" id="fileInput" accept=".json">
+  </div>
+
+  <!-- Settings -->
+  <div class="settings">
+    <div class="field">
+      <label>α (smoothing)</label>
+      <input type="number" id="alpha" value="0.01" step="0.001" min="0">
+    </div>
+    <div class="field">
+      <label>ターゲット語 (カンマ区切り)</label>
+      <input type="text" id="targets" value="mmja, unu, naugara" style="min-width:200px;">
+    </div>
+    <div class="field">
+      <label>オフセット範囲</label>
+      <div style="display:flex;gap:4px;">
+        <input type="number" id="offFrom" value="-5" style="min-width:55px;width:55px;">
+        <span style="color:var(--dim);line-height:32px;">〜</span>
+        <input type="number" id="offTo" value="5" style="min-width:55px;width:55px;">
+      </div>
+    </div>
+    <button class="btn" id="runBtn" disabled>計算実行</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <!-- Results -->
+  <div class="results" id="results">
+    <div class="summary" id="summaryCards"></div>
+    <div id="targetResults"></div>
+    
+    <div class="methodology">
+      <h3>方法論</h3>
+      <p>
+        1. <code>word_unit_id</code> で語レベルに折り畳み（先頭形態素＝語トークン、境界は語グループ内から伝播）<br>
+        2. Add-α smoothing 付きバイグラムモデル: <code>P(w|c) = (count(c,w)+α) / (count(c)+αV)</code><br>
+        3. 節境界リセット: <code>EOS / EAC / EQC / Q</code> → 次の語の文脈を <code>&lt;BOS&gt;</code> に<br>
+        4. サプライザル: <code>S(w|c) = −log₂ P(w|c)</code><br>
+        5. Cohen's d = (ターゲット平均 − コーパス平均) / コーパスSD<br>
+        6. Wilcoxon signed-rank test（Bonferroni k=3 補正）
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// Core Surprisal Engine (pure JS, mirrors surprisal_calc.py)
+// ══════════════════════════════════════════════════════
+
+const CLAUSE_BOUNDARIES = new Set(['EOS','EAC','EQC','Q','EQC+EOS','EQC+Q']);
+
+function loadAndCollapse(data) {
+  const flat = [];
+  for (const utt of data) {
+    const n = utt.morphs.length;
+    for (let i = 0; i < n; i++) {
+      flat.push({
+        morph:        utt.morphs[i],
+        pos:          utt.pos[i],
+        gloss:        utt.gloss[i],
+        boundary:     utt.boundary[i],
+        sentence_id:  utt.sentence_id[i],
+        word_unit_id: utt.word_unit_id[i],
+        word_pos:     utt.word_pos[i],
+      });
+    }
+  }
+
+  const wordSents = new Map(); // sentence_id → [{...}, ...]
+  let curWu = null, curGroup = [];
+
+  function flush() {
+    if (!curGroup.length) return;
+    const wt = {...curGroup[0]};
+    wt.boundary = null;
+    for (const m of curGroup) {
+      if (m.boundary) wt.boundary = m.boundary;
+    }
+    const sid = wt.sentence_id;
+    if (!wordSents.has(sid)) wordSents.set(sid, []);
+    wordSents.get(sid).push(wt);
+  }
+
+  for (const m of flat) {
+    if (m.word_unit_id !== curWu) {
+      flush();
+      curGroup = [m];
+      curWu = m.word_unit_id;
+    } else {
+      curGroup.push(m);
+    }
+  }
+  flush();
+  return wordSents;
+}
+
+function isClauseBoundary(w) {
+  return w.boundary ? CLAUSE_BOUNDARIES.has(w.boundary) : false;
+}
+
+function buildBigramModel(wordSents, alpha) {
+  const mc = new Map(); // unigram
+  const bc = new Map(); // bigram "prev\0cur" → count
+  const cc = new Map(); // context count
+
+  const inc = (map, key) => map.set(key, (map.get(key)||0) + 1);
+  const bk = (p,c) => p + '\0' + c;
+
+  const sids = [...wordSents.keys()].sort((a,b) => a-b);
+  for (const sid of sids) {
+    let prev = '<BOS>';
+    for (const w of wordSents.get(sid)) {
+      const cur = w.morph.toLowerCase();
+      inc(mc, cur);
+      inc(bc, bk(prev, cur));
+      inc(cc, prev);
+      prev = isClauseBoundary(w) ? '<BOS>' : cur;
+    }
+    inc(bc, bk(prev, '<EOS>'));
+    inc(cc, prev);
+  }
+
+  const V = mc.size;
+  const T = [...mc.values()].reduce((a,b) => a+b, 0);
+
+  function surp(p, c) {
+    const ctx = cc.get(p) || 0;
+    if (ctx === 0) {
+      return -Math.log2(((mc.get(c)||0) + alpha) / (T + alpha * V));
+    }
+    return -Math.log2(((bc.get(bk(p,c))||0) + alpha) / (ctx + alpha * V));
+  }
+
+  return { surp, mc, V, T };
+}
+
+function computeAllSurprisals(wordSents, surpFn) {
+  const allSurp = [];
+  const wordIndex = [];
+  const lookup = new Map();
+
+  const sids = [...wordSents.keys()].sort((a,b) => a-b);
+  for (const sid of sids) {
+    let prev = '<BOS>';
+    const ws = wordSents.get(sid);
+    for (let wi = 0; wi < ws.length; wi++) {
+      const w = ws[wi];
+      const cur = w.morph.toLowerCase();
+      allSurp.push(surpFn(prev, cur));
+      wordIndex.push({ sid, wi, w });
+      lookup.set(sid + ',' + wi, allSurp.length - 1);
+      prev = isClauseBoundary(w) ? '<BOS>' : cur;
+    }
+  }
+  return { allSurp, wordIndex, lookup };
+}
+
+function findTargets(wordIndex, morphName) {
+  const ml = morphName.toLowerCase();
+  const isNaugara = (ml === 'naugara');
+  return wordIndex
+    .map((item, ai) => ({ ...item, ai }))
+    .filter(({ w }) => {
+      const wm = w.morph.toLowerCase();
+      if (isNaugara) return (wm === 'naugara' || wm === 'nautiga') && w.word_pos === 'INTJ';
+      if (ml === 'unu') return wm === 'unu' && w.word_pos === 'INTJ' && w.gloss === 'FIL';
+      if (ml === 'mmja') return wm === 'mmja' && w.word_pos === 'INTJ';
+      return wm === ml; // generic
+    })
+    .map(({ sid, wi }) => [sid, wi]);
+}
+
+function getOffsetValues(locs, offset, allSurp, lookup) {
+  const vals = [];
+  for (const [sid, wi] of locs) {
+    const key = sid + ',' + (wi + offset);
+    if (lookup.has(key)) vals.push(allSurp[lookup.get(key)]);
+  }
+  return vals;
+}
+
+// Wilcoxon signed-rank test (simplified, two-sided)
+function wilcoxonTest(values, mu) {
+  const diffs = values.map(v => v - mu).filter(d => d !== 0);
+  const n = diffs.length;
+  if (n < 10) return { stat: null, p: null };
+
+  const ranked = diffs.map(d => ({ d, abs: Math.abs(d) }))
+    .sort((a,b) => a.abs - b.abs);
+
+  // Assign ranks with tie averaging
+  for (let i = 0; i < ranked.length; ) {
+    let j = i;
+    while (j < ranked.length && ranked[j].abs === ranked[i].abs) j++;
+    const avgRank = (i + j + 1) / 2; // 1-based
+    for (let k = i; k < j; k++) ranked[k].rank = avgRank;
+    i = j;
+  }
+
+  const Wplus = ranked.filter(r => r.d > 0).reduce((s, r) => s + r.rank, 0);
+  const Wminus = ranked.filter(r => r.d < 0).reduce((s, r) => s + r.rank, 0);
+  const W = Math.min(Wplus, Wminus);
+
+  // Normal approximation
+  const meanW = n * (n + 1) / 4;
+  const sdW = Math.sqrt(n * (n + 1) * (2 * n + 1) / 24);
+  const z = (W - meanW) / sdW;
+  // Two-sided p-value from normal approximation
+  const p = 2 * normalCDF(z);
+
+  return { stat: W, p, z };
+}
+
+function normalCDF(x) {
+  // Abramowitz & Stegun approximation
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
+  const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+  const sign = x < 0 ? -1 : 1;
+  x = Math.abs(x) / Math.SQRT2;
+  const t = 1.0 / (1.0 + p * x);
+  const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t * Math.exp(-x*x);
+  return 0.5 * (1.0 + sign * y);
+}
+
+
+// ══════════════════════════════════════════════════════
+// UI
+// ══════════════════════════════════════════════════════
+
+let loadedData = null;
+
+const $  = id => document.getElementById(id);
+const dropZone = $('dropZone');
+const fileInput = $('fileInput');
+const runBtn = $('runBtn');
+const statusEl = $('status');
+const resultsEl = $('results');
+
+// File handling
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+
+function handleFile(file) {
+  showStatus(`読み込み中: ${file.name} (${(file.size/1024).toFixed(0)} KB)...`);
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      loadedData = JSON.parse(e.target.result);
+      if (!Array.isArray(loadedData) || !loadedData[0]?.morphs) throw new Error('Invalid format');
+      const nUtt = loadedData.length;
+      const nMorph = loadedData.reduce((s, u) => s + u.morphs.length, 0);
+      dropZone.querySelector('p').innerHTML = `<strong>✓ ${file.name}</strong>　${nUtt} 発話・${nMorph} 形態素`;
+      showStatus(`${file.name} を読み込みました（${nUtt} 発話）`, 'ok');
+      runBtn.disabled = false;
+    } catch (err) {
+      showStatus('Error: JSONの形式が不正です — ' + err.message, 'error');
+      loadedData = null;
+      runBtn.disabled = true;
+    }
+  };
+  reader.readAsText(file);
+}
+
+function showStatus(msg, type='') {
+  statusEl.textContent = msg;
+  statusEl.className = 'status' + (type ? ' ' + type : '');
+  statusEl.style.display = 'block';
+}
+
+// Run
+runBtn.addEventListener('click', run);
+
+function run() {
+  if (!loadedData) return;
+  const alpha = parseFloat($('alpha').value) || 0.01;
+  const targetNames = $('targets').value.split(/[,、\s]+/).map(s => s.trim()).filter(Boolean);
+  const offFrom = parseInt($('offFrom').value) || -5;
+  const offTo = parseInt($('offTo').value) || 5;
+
+  showStatus('計算中...');
+  resultsEl.style.display = 'none';
+
+  // Use setTimeout to allow UI to update
+  setTimeout(() => {
+    try {
+      const t0 = performance.now();
+
+      const wordSents = loadAndCollapse(loadedData);
+      const nSents = wordSents.size;
+      const nWords = [...wordSents.values()].reduce((s, ws) => s + ws.length, 0);
+
+      const { surp, mc, V, T } = buildBigramModel(wordSents, alpha);
+      const { allSurp, wordIndex, lookup } = computeAllSurprisals(wordSents, surp);
+
+      const corpusMean = allSurp.reduce((a,b) => a+b, 0) / allSurp.length;
+      const corpusSD = Math.sqrt(allSurp.reduce((s, v) => s + (v-corpusMean)**2, 0) / allSurp.length);
+
+      const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
+      showStatus(`完了（${elapsed}s）`, 'ok');
+
+      // Summary cards
+      $('summaryCards').innerHTML = [
+        { label: '文数', value: nSents },
+        { label: '語トークン', value: nWords.toLocaleString() },
+        { label: '語彙 V', value: V },
+        { label: 'S̄ corpus', value: corpusMean.toFixed(4) + ' bits' },
+        { label: 'SD', value: corpusSD.toFixed(4) },
+        { label: 'α', value: alpha },
+      ].map(c => `<div class="stat-card"><div class="label">${c.label}</div><div class="value">${c.value}</div></div>`).join('');
+
+      // Per target
+      let html = '';
+      const nComp = targetNames.length;
+
+      for (const name of targetNames) {
+        const locs = findTargets(wordIndex, name);
+        const color = name === 'mmja' ? 'var(--red)' : name === 'unu' ? 'var(--blu)' : 'var(--pur)';
+
+        html += `<div class="target-section">`;
+        html += `<div class="target-header">
+          <span class="target-name" style="color:${color}">${name}</span>
+          <span class="target-meta">n = ${locs.length}</span>
+        </div>`;
+
+        if (!locs.length) {
+          html += `<p style="color:var(--dim);font-size:13px;">（コーパスに見つかりません）</p></div>`;
+          continue;
+        }
+
+        html += `<table><thead><tr>
+          <th>Offset</th><th class="r">S̄</th><th class="r">n</th>
+          <th class="r">d</th><th class="r">p (Bonf)</th>
+        </tr></thead><tbody>`;
+
+        const chartData = [];
+
+        for (let off = offFrom; off <= offTo; off++) {
+          const vals = getOffsetValues(locs, off, allSurp, lookup);
+          if (!vals.length) continue;
+
+          const mean = vals.reduce((a,b) => a+b, 0) / vals.length;
+          const d = (mean - corpusMean) / corpusSD;
+          chartData.push({ off, mean, n: vals.length });
+
+          let pStr = '';
+          if ([-1, 0, 1].includes(off) && vals.length >= 10) {
+            const test = wilcoxonTest(vals, corpusMean);
+            if (test.p !== null) {
+              const pBonf = Math.min(test.p * nComp, 1);
+              pStr = pBonf < 0.0001 ? '<span class="sig">&lt;.0001</span>' :
+                     pBonf < 0.05 ? `<span class="sig">${pBonf.toFixed(4)}</span>` :
+                     `<span class="ns">${pBonf.toFixed(4)}</span>`;
+            }
+          }
+
+          const label = off === -1 ? 'pre' : off === 0 ? 'self' : off === 1 ? 'post' : `${off > 0 ? '+' : ''}${off}`;
+          const isKey = [-1, 0, 1].includes(off);
+          const dClass = d > 0.2 ? 'pos' : d < -0.2 ? 'neg' : '';
+
+          html += `<tr${isKey ? ' class="hl"' : ''}>
+            <td>${label}</td>
+            <td class="r">${mean.toFixed(4)}</td>
+            <td class="r">${vals.length}</td>
+            <td class="r ${dClass}">${d >= 0 ? '+' : ''}${d.toFixed(4)}</td>
+            <td class="r">${pStr}</td>
+          </tr>`;
+        }
+
+        html += `</tbody></table>`;
+
+        // SVG chart
+        if (chartData.length > 1) {
+          html += renderChart(chartData, corpusMean, color, name);
+        }
+
+        html += `</div>`;
+      }
+
+      $('targetResults').innerHTML = html;
+      resultsEl.style.display = 'block';
+
+    } catch (err) {
+      showStatus('Error: ' + err.message, 'error');
+      console.error(err);
+    }
+  }, 50);
+}
+
+function renderChart(data, corpusMean, color, name) {
+  const W = 600, H = 160, pad = { t: 20, r: 50, b: 30, l: 50 };
+  const plotW = W - pad.l - pad.r;
+  const plotH = H - pad.t - pad.b;
+
+  const allVals = data.map(d => d.mean).concat([corpusMean]);
+  const yMin = Math.floor(Math.min(...allVals) - 0.5);
+  const yMax = Math.ceil(Math.max(...allVals) + 0.5);
+
+  const xScale = (off) => {
+    const offsets = data.map(d => d.off);
+    const minOff = Math.min(...offsets), maxOff = Math.max(...offsets);
+    return pad.l + ((off - minOff) / (maxOff - minOff)) * plotW;
+  };
+  const yScale = (v) => pad.t + (1 - (v - yMin) / (yMax - yMin)) * plotH;
+
+  const points = data.map(d => `${xScale(d.off).toFixed(1)},${yScale(d.mean).toFixed(1)}`).join(' ');
+  const corpusY = yScale(corpusMean).toFixed(1);
+
+  // Y axis ticks
+  let yTicks = '';
+  for (let v = Math.ceil(yMin); v <= Math.floor(yMax); v++) {
+    const y = yScale(v).toFixed(1);
+    yTicks += `<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="var(--bdr2)" stroke-width=".5"/>`;
+    yTicks += `<text x="${pad.l-6}" y="${y}" dy="3.5" text-anchor="end" fill="var(--dim)" font-size="10" font-family="var(--mono)">${v}</text>`;
+  }
+
+  // X axis labels
+  let xLabels = '';
+  for (const d of data) {
+    const x = xScale(d.off).toFixed(1);
+    const label = d.off === -1 ? 'pre' : d.off === 0 ? 'self' : d.off === 1 ? 'post' : `${d.off > 0 ? '+' : ''}${d.off}`;
+    xLabels += `<text x="${x}" y="${H - pad.b + 16}" text-anchor="middle" fill="var(--dim)" font-size="9" font-family="var(--mono)">${label}</text>`;
+  }
+
+  // Dots
+  let dots = '';
+  for (const d of data) {
+    const x = xScale(d.off).toFixed(1);
+    const y = yScale(d.mean).toFixed(1);
+    const r = [-1,0,1].includes(d.off) ? 4 : 2.5;
+    dots += `<circle cx="${x}" cy="${y}" r="${r}" fill="${color}" opacity=".9"/>`;
+    if ([-1,0,1].includes(d.off)) {
+      dots += `<text x="${x}" y="${parseFloat(y)-8}" text-anchor="middle" fill="${color}" font-size="9" font-family="var(--mono)" font-weight="600">${d.mean.toFixed(2)}</text>`;
+    }
+  }
+
+  return `
+  <div class="chart-wrap">
+    <h3>${name} — オフセット別 S̄</h3>
+    <svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px;">
+      ${yTicks}
+      <line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${H-pad.b}" stroke="var(--bdr)" stroke-width="1"/>
+      <line x1="${pad.l}" y1="${H-pad.b}" x2="${W-pad.r}" y2="${H-pad.b}" stroke="var(--bdr)" stroke-width="1"/>
+      <line x1="${pad.l}" y1="${corpusY}" x2="${W-pad.r}" y2="${corpusY}" stroke="var(--gld)" stroke-width=".8" stroke-dasharray="4,3"/>
+      <text x="${W-pad.r+4}" y="${corpusY}" dy="3.5" fill="var(--gld)" font-size="9" font-family="var(--mono)">S̄=${corpusMean.toFixed(2)}</text>
+      <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+      ${dots}
+      ${xLabels}
+    </svg>
+  </div>`;
+}
+</script>
+</body>
+</html>
