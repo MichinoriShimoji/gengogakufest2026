@@ -69,8 +69,8 @@
 
 <h3><span class="step-badge">Step 2</span> バイグラムモデル構築</h3>
 <p>Add-α smoothing（α = 0.01）付き。未知のバイグラムにも微小な確率を付与する:</p>
-<div class="formula">P(w | c) = (count(c, w) + 0.01) / (count(c) + 0.01 × 883)</div>
-<p>本コーパスでは V = 883 タイプ、T = 4,681 トークン。</p>
+<div class="formula">P(w | c) = (count(c, w) + 0.01) / (count(c) + 0.01 × 889)</div>
+<p>本コーパスでは V = 889 タイプ、T = 4,746 トークン。</p>
 
 <h3><span class="step-badge">Step 3</span> 節境界リセット</h3>
 <p>節境界（EOS / EAC / EQC / Q）を持つ語の後では、次の語の文脈を &lt;BOS&gt;（文頭）にリセットする。これにより、節をまたいだ不自然なバイグラムを避ける。</p>
@@ -88,15 +88,15 @@
     文脈: <code>du</code> → <code>mmja</code>
   </div>
 </div>
-<p>リセットにより 1.08 bits の差が生じる。リセットしないと、節境界後の語のサプライザルが不当に低くなる。</p>
+<p>リセットにより 1.07 bits の差が生じる。リセットしないと、節境界後の語のサプライザルが不当に低くなる。</p>
 
 <h3><span class="step-badge">Step 4</span> サプライザル計算</h3>
-<p>全 4,681 位置のサプライザルを計算。コーパス全体の統計:</p>
+<p>全 4,746 位置のサプライザルを計算。コーパス全体の統計:</p>
 <div class="sg">
   <div class="sg-item"><div class="v">4.95</div><div class="k">平均 S̄ (bits)</div></div>
   <div class="sg-item"><div class="v">2.30</div><div class="k">標準偏差 SD</div></div>
-  <div class="sg-item"><div class="v">4,681</div><div class="k">語トークン</div></div>
-  <div class="sg-item"><div class="v">883</div><div class="k">語彙 V</div></div>
+  <div class="sg-item"><div class="v">4,746</div><div class="k">語トークン</div></div>
+  <div class="sg-item"><div class="v">889</div><div class="k">語彙 V</div></div>
 </div>
 
 <!-- ═══ 3. Worked example ═══ -->
@@ -106,19 +106,19 @@
   <thead><tr><th>i</th><th>語 (w<sub>i</sub>)</th><th>POS</th><th>文脈 (w<sub>i−1</sub>)</th><th class="r">S (bits)</th><th>境界</th><th>次の文脈</th></tr></thead>
   <tbody>
     <tr class="hl"><td>0</td><td><strong style="color:var(--red)">mmja</strong></td><td>INTJ</td><td>&lt;BOS&gt;</td><td class="r"><strong>5.04</strong></td><td></td><td>&lt;BOS&gt; → mmja</td></tr>
-    <tr class="bnd"><td>1</td><td>misin</td><td>N</td><td>mmja</td><td class="r"><strong>7.19</strong></td><td style="color:var(--gold)">EAC</td><td>mmja → misin → <em>reset</em></td></tr>
-    <tr><td>2</td><td>ka</td><td>INTJ</td><td>&lt;BOS&gt;</td><td class="r"><strong>8.91</strong></td><td></td><td>&lt;BOS&gt; → ka</td></tr>
+    <tr class="bnd"><td>1</td><td>misin</td><td>N</td><td>mmja</td><td class="r"><strong>7.21</strong></td><td style="color:var(--gold)">EAC</td><td>mmja → misin → <em>reset</em></td></tr>
+    <tr><td>2</td><td>ka</td><td>INTJ</td><td>&lt;BOS&gt;</td><td class="r"><strong>8.94</strong></td><td></td><td>&lt;BOS&gt; → ka</td></tr>
     <tr class="bnd"><td>3</td><td>tti</td><td>CJP</td><td>ka</td><td class="r"><strong>2.07</strong></td><td style="color:var(--gold)">EQC</td><td>ka → tti → <em>reset</em></td></tr>
-    <tr><td>4</td><td>u</td><td>AUX</td><td>&lt;BOS&gt;</td><td class="r"><strong>9.49</strong></td><td></td><td>&lt;BOS&gt; → u</td></tr>
+    <tr><td>4</td><td>u</td><td>AUX</td><td>&lt;BOS&gt;</td><td class="r"><strong>10.51</strong></td><td></td><td>&lt;BOS&gt; → u</td></tr>
     <tr class="bnd"><td>5</td><td>du</td><td>ISP</td><td>u</td><td class="r"><strong>4.48</strong></td><td style="color:var(--gold)">EAC</td><td>u → du → <em>reset</em></td></tr>
     <tr class="hl"><td>6</td><td><strong style="color:var(--red)">mmja</strong></td><td>INTJ</td><td>&lt;BOS&gt;</td><td class="r"><strong>5.04</strong></td><td></td><td>&lt;BOS&gt; → mmja</td></tr>
-    <tr><td>7</td><td>kuusjuu</td><td>N</td><td>mmja</td><td class="r"><strong>7.19</strong></td><td></td><td>mmja → kuusjuu</td></tr>
-    <tr><td>8</td><td>nu</td><td>CP</td><td>kuusjuu</td><td class="r"><strong>2.43</strong></td><td></td><td>kuusjuu → nu</td></tr>
+    <tr><td>7</td><td>kuusjuu</td><td>N</td><td>mmja</td><td class="r"><strong>7.21</strong></td><td></td><td>mmja → kuusjuu</td></tr>
+    <tr><td>8</td><td>nu</td><td>CP</td><td>kuusjuu</td><td class="r"><strong>2.44</strong></td><td></td><td>kuusjuu → nu</td></tr>
     <tr><td>9</td><td>sugu</td><td>INTJ</td><td>nu</td><td class="r"><strong>7.58</strong></td><td></td><td>nu → sugu</td></tr>
   </tbody>
 </table></div>
 <p class="caption">表 1: 文 0 の先頭 10 語のサプライザル計算過程。境界がある語の後で文脈が &lt;BOS&gt; にリセットされる。mmja の行をハイライト。</p>
-<p>注目点: w₀ = <strong style="color:var(--red)">mmja</strong> の直後の w₁ = <code>misin</code> は S = 7.19 bits と非常に高い。これは mmja の後に多様な語が来るため、どの語も予測しにくいことを反映している。一方、w₃ = <code>tti</code> は S = 2.07 と低く、<code>ka</code> の後に <code>tti</code> が来るのは予測容易である。</p>
+<p>注目点: w₀ = <strong style="color:var(--red)">mmja</strong> の直後の w₁ = <code>misin</code> は S = 7.21 bits と非常に高い。これは mmja の後に多様な語が来るため、どの語も予測しにくいことを反映している。一方、w₃ = <code>tti</code> は S = 2.07 と低く、<code>ka</code> の後に <code>tti</code> が来るのは予測容易である。</p>
 
 <!-- ═══ 4. Bigram details ═══ -->
 <h2>4. バイグラムの具体例: mmja の後続語</h2>
@@ -138,7 +138,7 @@
 </table></div>
 <p class="caption">表 2: mmja 後続バイグラム上位 8。最頻の unu でも count = 8 と少なく、後続語は非常に多様。</p>
 <div class="callout" style="border-color:var(--red);background:var(--red-bg);">
-  <strong>重要な洞察:</strong> mmja の後には 112 種の異なる語が現れる（V = 883 の約 13%）。特定の語への偏りが小さいため、どの後続語も予測困難（高サプライザル）になる。これが mmja の post S̄ = 6.79 の原因であり、「これから難しい内容が来る」というアラート機能と整合的である。
+  <strong>重要な洞察:</strong> mmja の後には 112 種の異なる語が現れる（V = 889 の約 13%）。特定の語への偏りが小さいため、どの後続語も予測困難（高サプライザル）になる。これが mmja の post S̄ = 6.80 の原因であり、「これから難しい内容が来る」というアラート機能と整合的である。
 </div>
 
 <!-- ═══ 5. Offset analysis ═══ -->
@@ -147,21 +147,21 @@
 <div class="table-wrap"><table>
   <thead><tr><th>offset</th><th class="r">S̄</th><th class="r">n</th><th class="r">d</th></tr></thead>
   <tbody>
-    <tr><td>−5</td><td class="r">4.60</td><td class="r">107</td><td class="r">−0.15</td></tr>
-    <tr><td>−4</td><td class="r">5.46</td><td class="r">121</td><td class="r">+0.22</td></tr>
-    <tr><td>−3</td><td class="r">5.17</td><td class="r">131</td><td class="r">+0.09</td></tr>
-    <tr><td>−2</td><td class="r">5.11</td><td class="r">143</td><td class="r">+0.07</td></tr>
-    <tr class="hl"><td><strong>pre (−1)</strong></td><td class="r"><strong>4.66</strong></td><td class="r"><strong>153</strong></td><td class="r"><strong>−0.13</strong></td></tr>
-    <tr class="hl"><td><strong>self (0)</strong></td><td class="r"><strong>4.00</strong></td><td class="r"><strong>168</strong></td><td class="r"><strong>−0.41</strong></td></tr>
-    <tr class="hl"><td><strong style="color:var(--red)">post (+1)</strong></td><td class="r"><strong style="color:var(--red)">6.79</strong></td><td class="r"><strong>164</strong></td><td class="r"><strong style="color:var(--red)">+0.80</strong></td></tr>
-    <tr><td>+2</td><td class="r">3.77</td><td class="r">155</td><td class="r">−0.52</td></tr>
-    <tr><td>+3</td><td class="r">5.15</td><td class="r">149</td><td class="r">+0.09</td></tr>
-    <tr><td>+4</td><td class="r">4.76</td><td class="r">137</td><td class="r">−0.08</td></tr>
-    <tr><td>+5</td><td class="r">5.08</td><td class="r">126</td><td class="r">+0.05</td></tr>
+    <tr><td>−5</td><td class="r">4.63</td><td class="r">108</td><td class="r">−0.14</td></tr>
+    <tr><td>−4</td><td class="r">5.49</td><td class="r">123</td><td class="r">+0.24</td></tr>
+    <tr><td>−3</td><td class="r">5.17</td><td class="r">135</td><td class="r">+0.10</td></tr>
+    <tr><td>−2</td><td class="r">5.01</td><td class="r">144</td><td class="r">+0.03</td></tr>
+    <tr class="hl"><td><strong>pre (−1)</strong></td><td class="r"><strong>4.70</strong></td><td class="r"><strong>155</strong></td><td class="r"><strong>−0.11</strong></td></tr>
+    <tr class="hl"><td><strong>self (0)</strong></td><td class="r"><strong>3.99</strong></td><td class="r"><strong>170</strong></td><td class="r"><strong>−0.41</strong></td></tr>
+    <tr class="hl"><td><strong style="color:var(--red)">post (+1)</strong></td><td class="r"><strong style="color:var(--red)">6.80</strong></td><td class="r"><strong>166</strong></td><td class="r"><strong style="color:var(--red)">+0.81</strong></td></tr>
+    <tr><td>+2</td><td class="r">3.77</td><td class="r">157</td><td class="r">−0.51</td></tr>
+    <tr><td>+3</td><td class="r">5.17</td><td class="r">151</td><td class="r">+0.10</td></tr>
+    <tr><td>+4</td><td class="r">4.77</td><td class="r">139</td><td class="r">−0.07</td></tr>
+    <tr><td>+5</td><td class="r">5.05</td><td class="r">128</td><td class="r">+0.04</td></tr>
   </tbody>
 </table></div>
 <p class="caption">表 3: mmja のオフセット別サプライザル。post (+1) で急激に上昇し、+2 で急降下する「スパイク」が特徴的。</p>
-<p>mmja のプロファイルは明確な「谷→山」型を示す: self (4.00) で最低、post (6.79) で最高。これは mmja 自体が予測容易でありつつ、その直後に予測困難な語が来ることを意味する。</p>
+<p>mmja のプロファイルは明確な「谷→山」型を示す: self (3.99) で最低、post (6.80) で最高。これは mmja 自体が予測容易でありつつ、その直後に予測困難な語が来ることを意味する。</p>
 
 <!-- ═══ 6. Statistical testing ═══ -->
 <h2>6. 統計検定</h2>
@@ -169,9 +169,9 @@
 <div class="table-wrap"><table>
   <thead><tr><th>形式</th><th class="r">post S̄</th><th class="r">d</th><th class="r">p (raw)</th><th class="r">p (Bonf)</th></tr></thead>
   <tbody>
-    <tr><td class="l"><strong style="color:var(--red)">mmja</strong></td><td class="r">6.79</td><td class="r" style="font-weight:600">+0.80</td><td class="r">&lt;.0001</td><td class="r">&lt;.0001</td></tr>
-    <tr><td class="l"><strong style="color:var(--blu)">unu</strong></td><td class="r">5.63</td><td class="r">+0.29</td><td class="r">&lt;.0001</td><td class="r">&lt;.0001</td></tr>
-    <tr><td class="l"><strong style="color:var(--pur)">naugara</strong></td><td class="r">4.61</td><td class="r">−0.15</td><td class="r">&lt;.0001</td><td class="r">&lt;.0001</td></tr>
+    <tr><td class="l"><strong style="color:var(--red)">mmja</strong></td><td class="r">6.80</td><td class="r" style="font-weight:600">+0.81</td><td class="r">&lt;.0001</td><td class="r">&lt;.0001</td></tr>
+    <tr><td class="l"><strong style="color:var(--blu)">unu</strong></td><td class="r">5.68</td><td class="r">+0.32</td><td class="r">&lt;.0001</td><td class="r">&lt;.0001</td></tr>
+    <tr><td class="l"><strong style="color:var(--pur)">naugara</strong></td><td class="r">4.67</td><td class="r">−0.12</td><td class="r">&lt;.0001</td><td class="r">&lt;.0001</td></tr>
   </tbody>
 </table></div>
 <p class="caption">表 4: 統計検定結果。三者とも p &lt; .0001 だが、効果の方向と大きさが異なる。</p>

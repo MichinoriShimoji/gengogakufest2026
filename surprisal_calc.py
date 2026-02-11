@@ -27,7 +27,7 @@ from collections import Counter, defaultdict
 CLAUSE_BOUNDARIES = frozenset(('EOS', 'EAC', 'EQC', 'Q', 'EQC+EOS', 'EQC+Q'))
 DEFAULT_TARGETS = {
     'mmja':    lambda w: w['morph'].lower() == 'mmja'    and w['word_pos'] == 'INTJ',
-    'unu':     lambda w: w['morph'].lower() == 'unu'     and w['word_pos'] == 'INTJ' and w['gloss'] == 'FIL',
+    'unu':     lambda w: w['morph'].lower() == 'unu'     and w['word_pos'] == 'INTJ',
     'naugara': lambda w: w['morph'].lower() in ('naugara', 'nautiga') and w['word_pos'] == 'INTJ',
 }
 
@@ -43,9 +43,9 @@ def load_and_collapse(path):
     with open(path, encoding='utf-8') as f:
         data = json.load(f)
 
-    # 全形態素をフラットに展開
+    # 全形態素をフラットに展開（発話インデックス付き）
     flat = []
-    for utt in data:
+    for ui, utt in enumerate(data):
         n = len(utt['morphs'])
         for i in range(n):
             flat.append({
@@ -56,11 +56,14 @@ def load_and_collapse(path):
                 'sentence_id':  utt['sentence_id'][i],
                 'word_unit_id': utt['word_unit_id'][i],
                 'word_pos':     utt['word_pos'][i],
+                '_utt_idx':     ui,            # 発話境界追跡用
             })
 
     # word_unit_id でグループ化 → 語トークンに折り畳み
+    # ※ word_unit_id は発話内でのみ一意。発話を跨ぐ同一値を
+    #    別語として扱うため (_utt_idx, word_unit_id) をキーにする。
     word_sents = defaultdict(list)
-    cur_wu = None
+    cur_key = None          # (utt_idx, word_unit_id)
     cur_group = []
 
     def flush_group():
@@ -72,13 +75,15 @@ def load_and_collapse(path):
         for m in cur_group:
             if m['boundary']:
                 wt['boundary'] = m['boundary']
+        del wt['_utt_idx']
         word_sents[wt['sentence_id']].append(wt)
 
     for m in flat:
-        if m['word_unit_id'] != cur_wu:
+        key = (m['_utt_idx'], m['word_unit_id'])
+        if key != cur_key:
             flush_group()
             cur_group = [m]
-            cur_wu = m['word_unit_id']
+            cur_key = key
         else:
             cur_group.append(m)
     flush_group()
