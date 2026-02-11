@@ -15,6 +15,9 @@ surprisal_calc.py — 宮古語コーパスのバイグラム・サプライザ�
 使い方:
   python surprisal_calc.py final.json
   python surprisal_calc.py final.json --targets mmja unu naugara
+  python surprisal_calc.py final.json --targets TOP GEN FOC
+  python surprisal_calc.py final.json --targets a|TOP nu|GEN
+  python surprisal_calc.py final.json --targets "V[SEQ]" "V[RLS]" "V[PST]"
   python surprisal_calc.py final.json --alpha 0.05
   python surprisal_calc.py final.json --offsets -3 4
   python surprisal_calc.py final.json --csv results.csv
@@ -75,6 +78,8 @@ def load_and_collapse(path):
         for m in cur_group:
             if m['boundary']:
                 wt['boundary'] = m['boundary']
+        # 語末形態素の gloss を保持（活用形指定用）
+        wt['tail_gloss'] = cur_group[-1]['gloss']
         del wt['_utt_idx']
         word_sents[wt['sentence_id']].append(wt)
 
@@ -199,7 +204,11 @@ def main():
     parser.add_argument('--alpha', type=float, default=0.01,
                         help='Add-α smoothing のα値（デフォルト: 0.01）')
     parser.add_argument('--targets', nargs='*', default=None,
-                        help='ターゲット語（デフォルト: mmja unu naugara）')
+                        help='ターゲット語。大文字のみ→gloss指定（例: TOP → 全異形態）。'
+                             '"morph|gloss" で限定可（例: a|TOP）。'
+                             '"morph|gloss|pos" で pos も指定可。'
+                             '"POS[TAIL]" で語末形態素指定（例: V[SEQ], V[RLS]）。'
+                             'デフォルト: mmja unu naugara')
     parser.add_argument('--offsets', nargs=2, type=int, default=[-5, 6],
                         metavar=('FROM', 'TO'),
                         help='オフセット範囲（デフォルト: -5 6）')
@@ -229,19 +238,64 @@ def main():
     print("=" * 65)
 
     # ── ターゲット語の設定 ──
+    import re
+    bracket_re = re.compile(r'^([A-Za-z]*)\[([^\]]+)\]$')  # V[SEQ], [SEQ], etc.
+
     if args.targets:
-        # コマンドライン指定: 単純に morph.lower() で一致
+        # コマンドライン指定:
+        #   "mmja"       → デフォルト定義があればそれを使用、なければ morph 一致
+        #   "TOP"        → 大文字のみ → gloss == 'TOP'（全異形態）
+        #   "a|TOP"      → morph == 'a' AND gloss == 'TOP'
+        #   "a|TOP|CP"   → morph == 'a' AND gloss == 'TOP' AND pos == 'CP'
+        #   "|TOP"        → gloss == 'TOP'（全異形態、明示的パイプ）
+        #   "|TOP|CP"     → gloss == 'TOP' AND pos == 'CP'
+        #   "V[SEQ]"     → word_pos == 'V' AND tail_gloss == 'SEQ'
+        #   "[SEQ]"      → tail_gloss == 'SEQ'（pos 不問）
         targets = {}
         for t in args.targets:
-            tl = t.lower()
-            if tl in DEFAULT_TARGETS:
-                targets[tl] = DEFAULT_TARGETS[tl]
+            bm = bracket_re.match(t)
+            if bm:
+                # POS[TAIL_GLOSS] 形式
+                pos_pat = bm.group(1) if bm.group(1) else None
+                tail_pat = bm.group(2)
+                def make_bracket_cond(p, tg):
+                    def cond(w):
+                        if p and w.get('word_pos') != p:
+                            return False
+                        return w.get('tail_gloss') == tg
+                    return cond
+                targets[t] = make_bracket_cond(pos_pat, tail_pat)
+            elif '|' in t:
+                parts = t.split('|')
+                morph_pat = parts[0].lower() if parts[0] else None
+                gloss_pat = parts[1] if len(parts) > 1 and parts[1] else None
+                pos_pat   = parts[2] if len(parts) > 2 and parts[2] else None
+                def make_cond(m, g, p):
+                    def cond(w):
+                        if m and w['morph'].lower() != m:
+                            return False
+                        if g and w.get('gloss') != g:
+                            return False
+                        if p and w.get('word_pos') != p:
+                            return False
+                        return True
+                    return cond
+                targets[t] = make_cond(morph_pat, gloss_pat, pos_pat)
             else:
-                targets[tl] = lambda w, tl=tl: w['morph'].lower() == tl
+                tl = t.lower()
+                if tl in DEFAULT_TARGETS:
+                    targets[tl] = DEFAULT_TARGETS[tl]
+                elif t == t.upper() and t.isascii() and t.isalpha():
+                    # 大文字のみ → gloss 指定（全異形態）
+                    gloss_val = t
+                    targets[t] = lambda w, g=gloss_val: w.get('gloss') == g
+                else:
+                    targets[tl] = lambda w, tl=tl: w['morph'].lower() == tl
     else:
         targets = DEFAULT_TARGETS
 
     off_from, off_to = args.offsets
+    n_targets = len(targets)  # Bonferroni k = ターゲット数
     csv_rows = []
 
     for name, cond in targets.items():
@@ -265,9 +319,9 @@ def main():
             # 統計検定（self/pre/post のみ）
             p_str = ''
             if off in (-1, 0, 1) and len(vals) >= 10:
-                _, p_bonf = wilcoxon_test(vals, corpus_mean)
+                _, p_bonf = wilcoxon_test(vals, corpus_mean, n_comparisons=n_targets)
                 if p_bonf is not None:
-                    p_str = f'  p(Bonf)={p_bonf:.6f}' if p_bonf >= 0.0001 else '  p(Bonf)<.0001'
+                    p_str = f'  p(Bonf k={n_targets})={p_bonf:.6f}' if p_bonf >= 0.0001 else f'  p(Bonf k={n_targets})<.0001'
 
             print(f"  {label:>5s}: S̄={mean_val:.4f}  n={len(vals):>4d}  d={d:+.4f}{p_str}")
 

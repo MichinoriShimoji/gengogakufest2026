@@ -150,12 +150,12 @@
 <div class="container">
 
   <h1>Bigram <span>Surprisal</span> Calculator</h1>
-  <p class="sub">final.json をアップロード → バイグラム・サプライザルを計算</p>
+  <p class="sub">JSON をアップロード → バイグラム・サプライザルを計算（morph|gloss 指定対応）</p>
 
   <!-- Upload -->
   <div class="upload-zone" id="dropZone">
     <div class="icon">📂</div>
-    <p><strong>final.json をドロップ</strong>　またはクリックして選択</p>
+    <p><strong>JSON をドロップ</strong>　またはクリックして選択</p>
     <input type="file" id="fileInput" accept=".json">
   </div>
 
@@ -166,8 +166,8 @@
       <input type="number" id="alpha" value="0.01" step="0.001" min="0">
     </div>
     <div class="field">
-      <label>ターゲット語 (カンマ区切り)</label>
-      <input type="text" id="targets" value="mmja, unu, naugara" style="min-width:200px;">
+      <label>ターゲット語 (カンマ区切り, morph|gloss 可)</label>
+      <input type="text" id="targets" value="mmja, unu, naugara" style="min-width:260px;" placeholder="mmja, TOP, a|TOP, V[SEQ]">
     </div>
     <div class="field">
       <label>オフセット範囲</label>
@@ -190,12 +190,21 @@
     <div class="methodology">
       <h3>方法論</h3>
       <p>
-        1. <code>word_unit_id</code> で語レベルに折り畳み（先頭形態素＝語トークン、境界は語グループ内から伝播）<br>
+        1. <code>word_unit_id</code> で語レベルに折り畳み（発話単位で一意化、先頭形態素＝語トークン、境界は語グループ内から伝播）<br>
         2. Add-α smoothing 付きバイグラムモデル: <code>P(w|c) = (count(c,w)+α) / (count(c)+αV)</code><br>
         3. 節境界リセット: <code>EOS / EAC / EQC / Q</code> → 次の語の文脈を <code>&lt;BOS&gt;</code> に<br>
         4. サプライザル: <code>S(w|c) = −log₂ P(w|c)</code><br>
         5. Cohen's d = (ターゲット平均 − コーパス平均) / コーパスSD<br>
-        6. Wilcoxon signed-rank test（Bonferroni k=3 補正）
+        6. Wilcoxon signed-rank test（Bonferroni k=ターゲット数 で補正）
+      </p>
+      <p style="margin-top:10px;">
+        <strong>ターゲット指定:</strong>
+        <code>mmja</code>（デフォルト定義）、
+        <code>TOP</code>（大文字のみ→gloss指定、全異形態 a/ja/na… を合算）、
+        <code>a|TOP</code>（morph=a, gloss=TOP に限定）、
+        <code>V[SEQ]</code>（word_pos=V で語末形態素の gloss=SEQ）、
+        <code>[PST]</code>（pos不問、語末が PST の語すべて）。
+        語レベル分析のため先頭形態素のみがマッチ対象（gloss は先頭形態素、tail_gloss は末尾形態素）。
       </p>
     </div>
   </div>
@@ -211,7 +220,8 @@ const CLAUSE_BOUNDARIES = new Set(['EOS','EAC','EQC','Q','EQC+EOS','EQC+Q']);
 
 function loadAndCollapse(data) {
   const flat = [];
-  for (const utt of data) {
+  for (let ui = 0; ui < data.length; ui++) {
+    const utt = data[ui];
     const n = utt.morphs.length;
     for (let i = 0; i < n; i++) {
       flat.push({
@@ -222,12 +232,14 @@ function loadAndCollapse(data) {
         sentence_id:  utt.sentence_id[i],
         word_unit_id: utt.word_unit_id[i],
         word_pos:     utt.word_pos[i],
+        _uttIdx:      ui,
       });
     }
   }
 
   const wordSents = new Map(); // sentence_id → [{...}, ...]
-  let curWu = null, curGroup = [];
+  // word_unit_id は発話内でのみ一意。(_uttIdx, word_unit_id) をキーにする。
+  let curKey = null, curGroup = [];
 
   function flush() {
     if (!curGroup.length) return;
@@ -236,16 +248,19 @@ function loadAndCollapse(data) {
     for (const m of curGroup) {
       if (m.boundary) wt.boundary = m.boundary;
     }
+    wt.tail_gloss = curGroup[curGroup.length - 1].gloss;
+    delete wt._uttIdx;
     const sid = wt.sentence_id;
     if (!wordSents.has(sid)) wordSents.set(sid, []);
     wordSents.get(sid).push(wt);
   }
 
   for (const m of flat) {
-    if (m.word_unit_id !== curWu) {
+    const key = m._uttIdx + ',' + m.word_unit_id;
+    if (key !== curKey) {
       flush();
       curGroup = [m];
-      curWu = m.word_unit_id;
+      curKey = key;
     } else {
       curGroup.push(m);
     }
@@ -315,18 +330,62 @@ function computeAllSurprisals(wordSents, surpFn) {
   return { allSurp, wordIndex, lookup };
 }
 
-function findTargets(wordIndex, morphName) {
-  const ml = morphName.toLowerCase();
-  const isNaugara = (ml === 'naugara');
+// Parse target specification: "morph", "morph|gloss", "|gloss", or "morph|gloss|pos"
+function parseTargetSpec(spec) {
+  const parts = spec.split('|');
+  const morph = parts[0] ? parts[0].toLowerCase() : null;  // empty → null
+  const gloss = parts.length > 1 && parts[1] ? parts[1] : null;
+  const pos   = parts.length > 2 && parts[2] ? parts[2] : null;
+  return { morph, gloss, pos, raw: spec };
+}
+
+// Built-in defaults (used when no | is present and name matches)
+const DEFAULT_TARGETS = {
+  mmja:    w => w.morph.toLowerCase() === 'mmja'    && w.word_pos === 'INTJ',
+  unu:     w => w.morph.toLowerCase() === 'unu'     && w.word_pos === 'INTJ',
+  naugara: w => {
+    const m = w.morph.toLowerCase();
+    return (m === 'naugara' || m === 'nautiga') && w.word_pos === 'INTJ';
+  },
+};
+
+const BRACKET_RE = /^([A-Za-z]*)\[([^\]]+)\]$/;
+
+function findTargets(wordIndex, nameOrSpec) {
+  let matchFn;
+  const bm = nameOrSpec.match(BRACKET_RE);
+  if (bm) {
+    // POS[TAIL_GLOSS] 形式: V[SEQ], [SEQ], etc.
+    const posP = bm[1] || null;
+    const tailP = bm[2];
+    matchFn = w => {
+      if (posP && w.word_pos !== posP) return false;
+      return w.tail_gloss === tailP;
+    };
+  } else if (nameOrSpec.includes('|')) {
+    // morph|gloss or morph|gloss|pos (morph can be empty: "|TOP")
+    const { morph, gloss, pos } = parseTargetSpec(nameOrSpec);
+    matchFn = w => {
+      if (morph && w.morph.toLowerCase() !== morph) return false;
+      if (gloss && w.gloss !== gloss) return false;
+      if (pos && w.word_pos !== pos) return false;
+      return true;
+    };
+  } else {
+    const ml = nameOrSpec.toLowerCase();
+    if (DEFAULT_TARGETS[ml]) {
+      matchFn = DEFAULT_TARGETS[ml];
+    } else if (/^[A-Z0-9]+$/.test(nameOrSpec)) {
+      // 大文字のみ → gloss 指定（全異形態）
+      const g = nameOrSpec;
+      matchFn = w => w.gloss === g;
+    } else {
+      matchFn = w => w.morph.toLowerCase() === ml;
+    }
+  }
   return wordIndex
     .map((item, ai) => ({ ...item, ai }))
-    .filter(({ w }) => {
-      const wm = w.morph.toLowerCase();
-      if (isNaugara) return (wm === 'naugara' || wm === 'nautiga') && w.word_pos === 'INTJ';
-      if (ml === 'unu') return wm === 'unu' && w.word_pos === 'INTJ' && w.gloss === 'FIL';
-      if (ml === 'mmja') return wm === 'mmja' && w.word_pos === 'INTJ';
-      return wm === ml; // generic
-    })
+    .filter(({ w }) => matchFn(w))
     .map(({ sid, wi }) => [sid, wi]);
 }
 
@@ -477,10 +536,14 @@ function run() {
       // Per target
       let html = '';
       const nComp = targetNames.length;
+      const defaultColors = ['var(--red)', 'var(--blu)', 'var(--pur)', 'var(--grn)', 'var(--gld)'];
+      const allChartSeries = []; // for overlay chart
 
-      for (const name of targetNames) {
+      for (let ti = 0; ti < targetNames.length; ti++) {
+        const name = targetNames[ti];
         const locs = findTargets(wordIndex, name);
-        const color = name === 'mmja' ? 'var(--red)' : name === 'unu' ? 'var(--blu)' : 'var(--pur)';
+        const color = name === 'mmja' ? 'var(--red)' : name === 'unu' ? 'var(--blu)' :
+                      name === 'naugara' ? 'var(--pur)' : defaultColors[ti % defaultColors.length];
 
         html += `<div class="target-section">`;
         html += `<div class="target-header">
@@ -513,9 +576,9 @@ function run() {
             const test = wilcoxonTest(vals, corpusMean);
             if (test.p !== null) {
               const pBonf = Math.min(test.p * nComp, 1);
-              pStr = pBonf < 0.0001 ? '<span class="sig">&lt;.0001</span>' :
-                     pBonf < 0.05 ? `<span class="sig">${pBonf.toFixed(4)}</span>` :
-                     `<span class="ns">${pBonf.toFixed(4)}</span>`;
+              pStr = pBonf < 0.0001 ? `<span class="sig">&lt;.0001 <span style="font-size:10px;color:var(--dim)">(k=${nComp})</span></span>` :
+                     pBonf < 0.05 ? `<span class="sig">${pBonf.toFixed(4)} <span style="font-size:10px;color:var(--dim)">(k=${nComp})</span></span>` :
+                     `<span class="ns">${pBonf.toFixed(4)} <span style="font-size:10px;color:var(--dim)">(k=${nComp})</span></span>`;
             }
           }
 
@@ -537,9 +600,15 @@ function run() {
         // SVG chart
         if (chartData.length > 1) {
           html += renderChart(chartData, corpusMean, color, name);
+          allChartSeries.push({ name, color, data: chartData, n: locs.length });
         }
 
         html += `</div>`;
+      }
+
+      // ── Overlay chart (2+ targets) ──
+      if (allChartSeries.length >= 2) {
+        html += renderOverlayChart(allChartSeries, corpusMean);
       }
 
       $('targetResults').innerHTML = html;
@@ -614,6 +683,104 @@ function renderChart(data, corpusMean, color, name) {
     </svg>
   </div>`;
 }
+function renderOverlayChart(series, corpusMean) {
+  const W = 700, H = 240, pad = { t: 24, r: 60, b: 34, l: 54 };
+  const plotW = W - pad.l - pad.r;
+  const plotH = H - pad.t - pad.b;
+  const dashPatterns = ['', '6,3', '2,3', '8,2,2,2', '4,4'];
+
+  // Compute shared scales from all series
+  const allOffsets = new Set();
+  let allVals = [corpusMean];
+  for (const s of series) {
+    for (const d of s.data) {
+      allOffsets.add(d.off);
+      allVals.push(d.mean);
+    }
+  }
+  const offsets = [...allOffsets].sort((a,b) => a - b);
+  const minOff = offsets[0], maxOff = offsets[offsets.length - 1];
+  const yMin = Math.floor(Math.min(...allVals) - 0.5);
+  const yMax = Math.ceil(Math.max(...allVals) + 0.5);
+
+  const xScale = off => pad.l + ((off - minOff) / (maxOff - minOff || 1)) * plotW;
+  const yScale = v => pad.t + (1 - (v - yMin) / (yMax - yMin)) * plotH;
+  const corpusY = yScale(corpusMean).toFixed(1);
+
+  // Grid
+  let yTicks = '';
+  for (let v = Math.ceil(yMin); v <= Math.floor(yMax); v++) {
+    const y = yScale(v).toFixed(1);
+    yTicks += `<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="var(--bdr2)" stroke-width=".5"/>`;
+    yTicks += `<text x="${pad.l-6}" y="${y}" dy="3.5" text-anchor="end" fill="var(--dim)" font-size="10" font-family="var(--mono)">${v}</text>`;
+  }
+
+  // X labels
+  let xLabels = '';
+  for (const off of offsets) {
+    const x = xScale(off).toFixed(1);
+    const label = off === -1 ? 'pre' : off === 0 ? 'self' : off === 1 ? 'post' : `${off > 0 ? '+' : ''}${off}`;
+    xLabels += `<text x="${x}" y="${H - pad.b + 16}" text-anchor="middle" fill="var(--dim)" font-size="9" font-family="var(--mono)">${label}</text>`;
+  }
+
+  // Lines + dots per series
+  let lines = '';
+  for (let si = 0; si < series.length; si++) {
+    const s = series[si];
+    const dash = dashPatterns[si % dashPatterns.length];
+    const sw = si === 0 ? 2.5 : 2;
+
+    // Polyline
+    const pts = s.data.map(d => `${xScale(d.off).toFixed(1)},${yScale(d.mean).toFixed(1)}`).join(' ');
+    lines += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="${sw}" stroke-linejoin="round"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`;
+
+    // Dots: key offsets only (pre/self/post)
+    for (const d of s.data) {
+      if (![-1, 0, 1].includes(d.off)) continue;
+      const x = xScale(d.off).toFixed(1);
+      const y = yScale(d.mean).toFixed(1);
+      lines += `<circle cx="${x}" cy="${y}" r="3.5" fill="${s.color}" opacity=".9"/>`;
+    }
+
+    // Post label (value at post offset)
+    const postPt = s.data.find(d => d.off === 1);
+    if (postPt) {
+      const px = xScale(1);
+      const py = yScale(postPt.mean);
+      // Stagger labels to reduce overlap
+      const labelOff = 12 + si * 13;
+      lines += `<text x="${(px + 10).toFixed(1)}" y="${(py - 4 + si * 2).toFixed(1)}" fill="${s.color}" font-size="9" font-family="var(--mono)" font-weight="600">${postPt.mean.toFixed(2)}</text>`;
+    }
+  }
+
+  // Legend
+  let legend = '';
+  const legendY = 14;
+  let legendX = pad.l + 4;
+  for (let si = 0; si < series.length; si++) {
+    const s = series[si];
+    const dash = dashPatterns[si % dashPatterns.length];
+    legend += `<line x1="${legendX}" y1="${legendY}" x2="${legendX + 20}" y2="${legendY}" stroke="${s.color}" stroke-width="2"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`;
+    legend += `<text x="${legendX + 24}" y="${legendY + 3.5}" fill="${s.color}" font-size="10" font-family="var(--sans)">${s.name} <tspan fill="var(--dim)" font-size="9">(n=${s.n})</tspan></text>`;
+    legendX += 26 + (s.name.length + 6) * 7;
+  }
+
+  return `
+  <div class="chart-wrap" style="margin-top:28px;border-color:var(--gld);border-width:1.5px;">
+    <h3 style="font-size:14px;color:var(--fg);margin-bottom:14px;">オフセット別 S̄ — 全ターゲット重ね合わせ</h3>
+    <svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px;">
+      ${yTicks}
+      <line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${H-pad.b}" stroke="var(--bdr)" stroke-width="1"/>
+      <line x1="${pad.l}" y1="${H-pad.b}" x2="${W-pad.r}" y2="${H-pad.b}" stroke="var(--bdr)" stroke-width="1"/>
+      <line x1="${pad.l}" y1="${corpusY}" x2="${W-pad.r}" y2="${corpusY}" stroke="var(--gld)" stroke-width=".8" stroke-dasharray="4,3"/>
+      <text x="${W-pad.r+4}" y="${corpusY}" dy="3.5" fill="var(--gld)" font-size="9" font-family="var(--mono)">S̄=${corpusMean.toFixed(2)}</text>
+      ${lines}
+      ${xLabels}
+      ${legend}
+    </svg>
+  </div>`;
+}
+
 </script>
 </body>
 </html>
