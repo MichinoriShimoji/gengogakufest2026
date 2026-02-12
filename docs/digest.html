@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>危機言語の記述研究の困難を自然言語処理技術で解決したい — 九大下地理則ゼミの新しい挑戦</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700;900&family=Noto+Sans+JP:wght@300;400;500;700;900&family=Source+Code+Pro:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0F1923;
+    --ink-soft: #2A3544;
+    --slate: #4A5568;
+    --mist: #94A3B8;
+    --paper: #F8F6F1;
+    --paper-warm: #F2EDE4;
+    --cream: #EDE8DD;
+    --accent: #C84B31;
+    --accent-light: #E86F56;
+    --accent-glow: rgba(200, 75, 49, 0.08);
+    --teal: #1B7A6E;
+    --teal-light: #2BA396;
+    --teal-bg: rgba(27, 122, 110, 0.06);
+    --gold: #B8860B;
+    --gold-bg: rgba(184, 134, 11, 0.06);
+  }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #D5CFC5;
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .poster {
+    width: 794px;
+    height: 1120px;
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.2);
+    display: flex; flex-direction: column;
+    
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--ink);
+    padding: 14px 32px 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.015) 3px, rgba(255,255,255,0.015) 4px),
+      repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.01) 3px, rgba(255,255,255,0.01) 4px);
+  }
+
+  .header-top-line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-badge { display: flex; align-items: center; gap: 6px; }
+
+  .badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  .badge-univ {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .badge-year { background: var(--accent); color: white; }
+
+  .header-title { position: relative; z-index: 1; }
+
+  .header-title h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: 3px;
+    line-height: 1.25;
+    margin-bottom: 5px;
+  }
+
+  .en-title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .tagline {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .tagline em {
+    color: var(--accent-light);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  /* ===== PROGRAM BAR ===== */
+  .program-bar {
+    background: var(--cream);
+    padding: 3px 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .program-bar h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 2px;
+  }
+
+  .program-bar .dash { flex: 1; border-bottom: 1px dashed var(--mist); }
+
+  .program-bar .note {
+    font-size: 12px;
+    color: var(--accent);
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 700;
+  }
+
+  /* TIME BAR */
+  .time-strip {
+    background: var(--cream);
+    padding: 0 32px 3px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .time-bar { display: flex; height: 7px; border-radius: 4px; overflow: hidden; gap: 2px; }
+  .seg { border-radius: 4px; }
+  .seg-01 { flex: 1; background: var(--mist); }
+  .seg-02 { flex: 10; background: var(--teal); }
+  .seg-03 { flex: 30; background: var(--accent); }
+
+  .time-labels { display: flex; margin-top: 3px; gap: 2px; }
+  .time-labels .tl {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 9px;
+    color: var(--slate);
+    text-align: center;
+    font-weight: 600;
+  }
+  .tl-01 { flex: 1; }
+  .tl-02 { flex: 10; }
+  .tl-03 { flex: 30; color: var(--accent); font-weight: 800; font-size: 10px; }
+
+  /* ===== SECTIONS GRID ===== */
+  .section {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: var(--paper);
+  }
+
+  .sec-num {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+    background: var(--paper-warm);
+    border-right: 2px solid var(--cream);
+  }
+
+  .sec-num .num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .sec-num .stime {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-top: 3px;
+  }
+
+  .sec-num .dot-line {
+    width: 2px; flex: 1; margin-top: 6px;
+    background: repeating-linear-gradient(180deg, var(--mist) 0, var(--mist) 3px, transparent 3px, transparent 8px);
+    opacity: 0.4;
+  }
+
+  .sec-body { padding: 8px 24px 8px 16px; }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+
+  .sec-head h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .sec-head .en {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 9.5px;
+    color: var(--mist);
+  }
+
+  .sec-head .tbadge {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1.5px solid rgba(200, 75, 49, 0.15);
+    padding: 2px 10px;
+    border-radius: 3px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* Part 01 */
+  .intro-text {
+    font-size: 11.5px;
+    color: var(--slate);
+    line-height: 1.55;
+  }
+
+  .intro-text strong { color: var(--ink); font-weight: 600; }
+
+  .intro-values {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 4px;
+    padding: 5px 10px;
+    background: var(--cream);
+    border-radius: 6px;
+    border-left: 3px solid var(--ink);
+  }
+
+
+  .intro-values p {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .intro-values p strong { color: var(--ink); }
+
+  /* Part 02 Members */
+  .members-legend {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 3px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 8px;
+    color: var(--mist);
+  }
+
+  .legend-dot { width: 7px; height: 2px; border-radius: 1px; }
+  .legend-dot.ld { background: var(--teal); }
+  .legend-dot.lm { background: var(--gold); }
+  .legend-dot.lp { background: var(--accent); }
+
+  .members-flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+  }
+
+  .m-card {
+    background: white;
+    border-radius: 5px;
+    padding: 6px 6px 5px;
+    border: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+  }
+
+  .m-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 5px 5px 0 0;
+  }
+
+  .m-card.d::before { background: var(--teal); }
+  .m-card.m::before { background: var(--gold); }
+  .m-card.p::before { background: var(--accent); }
+
+  .m-role {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  .m-card.d .m-role { background: rgba(27,122,110,0.08); color: var(--teal); }
+  .m-card.m .m-role { background: var(--gold-bg); color: var(--gold); }
+  .m-card.p .m-role { background: var(--accent-glow); color: var(--accent); }
+
+  .m-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 1px;
+  }
+
+  .m-name-link {
+    display: block;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1.25;
+    margin-bottom: 1px;
+    text-decoration: underline;
+    text-decoration-color: rgba(0,128,128,0.3);
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .m-name-link:hover {
+    color: var(--coral);
+    text-decoration-color: var(--coral);
+  }
+
+  .m-name-en {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 8px;
+    color: var(--mist);
+    margin-bottom: 3px;
+  }
+
+  .m-topic {
+    font-size: 9.5px;
+    color: var(--slate);
+    line-height: 1.4;
+  }
+
+  .m-topic b { color: var(--ink-soft); font-weight: 600; }
+
+  .m-affil {
+    font-size: 7.5px;
+    color: var(--mist);
+    margin-top: 2px;
+    padding-top: 2px;
+    border-top: 1px dashed rgba(0,0,0,0.06);
+  }
+
+  /* ===== FLOW ARROWS ===== */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -1px 0;
+    position: relative;
+    z-index: 2;
+    background: var(--paper);
+  }
+
+  .flow-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--paper);
+    padding: 0px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.06);
+    font-size: 9px;
+    color: var(--mist);
+  }
+
+  .flow-pill .arrow { font-size: 9px; color: var(--accent); }
+
+  .flow-feat {
+    background: linear-gradient(90deg, var(--paper) 0%, var(--paper) 40%, var(--ink) 40%, var(--ink) 100%);
+  }
+
+  .flow-feat .flow-pill {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    font-weight: 700;
+  }
+
+  .flow-feat .flow-pill .arrow { color: white; }
+
+  /* ===== PART 3 FEATURED ===== */
+  .featured {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    
+    min-height: 0; flex: 1;
+  }
+
+  .feat-num {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+    background: var(--ink);
+    border-right-color: var(--ink);
+  }
+
+  .feat-num .num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-light);
+    line-height: 1;
+  }
+
+  .feat-num .stime {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-light);
+    background: rgba(232, 111, 86, 0.2);
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-top: 3px;
+  }
+
+  .feat-num .dot-line {
+    width: 2px; flex: 1; margin-top: 6px;
+    background: repeating-linear-gradient(180deg, rgba(255,255,255,0.3) 0, rgba(255,255,255,0.3) 3px, transparent 3px, transparent 8px);
+  }
+
+  .feat-body {
+    background: linear-gradient(135deg, var(--ink) 0%, #1A2836 60%, #1F3044 100%);
+    padding: 6px 24px 4px 16px;
+    position: relative; display: flex; flex-direction: column;
+    overflow: hidden; justify-content: flex-start; flex: 1;
+  }
+
+  .feat-body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(ellipse at 90% 20%, rgba(200,75,49,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 10% 80%, rgba(27,122,110,0.06) 0%, transparent 50%);
+  }
+
+  .feat-body > * { position: relative; z-index: 1; }
+
+  .feat-overline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1px;
+  }
+
+  .feat-tag {
+    background: var(--accent);
+    color: white;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  .feat-overline .tbadge-dark {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    padding: 2px 10px;
+    border-radius: 3px;
+  }
+
+  .feat-overline .line { flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+  .feat-subtitle {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .feat-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1.3;
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+  }
+
+  .feat-title-en {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 1px;
+  }
+
+  /* Research boxes */
+  .feat-research {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 5px;
+    flex: 1;
+  }
+
+  .fr-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px;
+    padding: 7px 9px; display: flex; flex-direction: column;
+    min-height: 0;
+  }
+
+  .fr-box h5 {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 8.5px;
+    font-weight: 600;
+    color: var(--teal-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .fr-box h5 .ci { font-size: 9px; }
+
+  .fr-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .fr-box p {
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.65;
+  }
+
+  .fr-box p strong {
+    color: rgba(255,255,255,0.9);
+    font-weight: 600;
+  }
+
+  .code-snippet {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 9px;
+    color: var(--teal-light);
+    background: rgba(0,0,0,0.25);
+    padding: 6px 8px;
+    border-radius: 3px;
+    margin-top: 5px;
+    line-height: 1.55;
+    border-left: 2px solid var(--teal);
+    flex: 1;
+  }
+
+  .code-snippet .comment { color: rgba(255,255,255,0.3); }
+  .code-snippet .keyword { color: var(--accent-light); }
+  .code-snippet .string { color: #7DD3A8; }
+
+  .fr-link {
+    display: block;
+    margin-top: auto; padding-top: 8px;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    color: var(--accent-light);
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .fr-link:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: var(--accent-light);
+  }
+
+  /* Lab link at bottom of featured */
+  .lab-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 2px 0 2px 0;
+    padding: 2px 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .lab-link:hover { background: rgba(255,255,255,0.12); }
+
+  .lab-link .lab-icon { font-size: 16px; }
+
+  .lab-link .lab-label {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+
+  .lab-link .lab-url {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 8px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .lab-link .lab-arrow {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-light);
+  }
+  .poster-footer {
+    height: 6px;
+    background: var(--paper);
+    flex-shrink: 0;
+  }
+
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top-line">
+      <div class="header-badge">
+        <span class="badge badge-year">B-06</span>
+        <span class="badge badge-univ">九州大学 人文科学研究院 言語学講座</span>
+      </div>
+    </div>
+    <div class="header-title">
+      <h1>危機言語の記述研究の困難を<br>自然言語処理技術で解決したい</h1>
+      <div class="en-title">九大下地理則ゼミの新しい挑戦</div>
+      <div class="tagline">
+        ことばの<em>多様性</em>を記録し、ことばの<em>普遍性</em>を探る。フィールドワーク × 言語類型論 × 計算的手法 —— <em>危機言語の記述研究</em>を進化させ続ける研究室です。
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRAM BAR -->
+  <div class="program-bar">
+    <span style="font-size:12px;">📋</span>
+    <h2>PROGRAM</h2>
+    <span class="dash"></span>
+    <span class="note">⏱ Total approx. 40 min</span>
+  </div>
+
+  <!-- TIME BAR -->
+  <div class="time-strip">
+    <div class="time-bar">
+      <div class="seg seg-01"></div>
+      <div class="seg seg-02"></div>
+      <div class="seg seg-03"></div>
+    </div>
+    <div class="time-labels">
+      <div class="tl tl-01">01</div>
+      <div class="tl tl-02">02 — 5–10 min</div>
+      <div class="tl tl-03">★ 03 — 30 min</div>
+    </div>
+  </div>
+
+  <!-- PART 01 -->
+  <div class="section">
+    <div class="sec-num">
+      <div class="num">01</div>
+      <div class="stime">1'</div>
+      <div class="dot-line"></div>
+    </div>
+    <div class="sec-body">
+      <div class="sec-head">
+        <h3>研究室紹介</h3>
+        <span class="en">About the Lab</span>
+        <span class="tbadge">⏱ 1 min</span>
+      </div>
+      <p class="intro-text">
+        下地研究室は、<strong>日琉諸語のフィールドワークに基づく総合的な記述研究</strong>を中心に据えた研究室です。話者の高齢化により急速に失われつつある各地の方言に対し、音韻・形態・統語・談話の全レベルにわたる記述を行い、言語の多様性を記録するとともに、<strong>言語の普遍的な仕組み</strong>を探求しています。
+      </p>
+      <div class="intro-values">
+        <span class="values-icon">🧭</span>
+        <div>
+          <p>
+            記述言語学のフィールドワークで得た<strong>貴重な一次データ</strong>を、地に足のついた記述言語学的手法で<strong>精密に記録・注釈</strong>し、その上で、伝統的な記述的手法や研究パラダイムでは困難だった問題に、<strong>新しい手法で挑む</strong>——これが、私たちのゼミ全体の研究文化です。全て完璧にできる人は多分いない。<strong>どれかが得意な人に頼りつつ、うちに閉ざさず、外に対してオープンに</strong>、常に仲間の輪を広げながら問題を解決していきたいと思っています。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW -->
+  <div class="flow">
+    <div class="flow-pill"><span class="arrow">▼</span></div>
+  </div>
+
+  <!-- PART 02 -->
+  <div class="section">
+    <div class="sec-num">
+      <div class="num">02</div>
+      <div class="stime">5–10'</div>
+      <div class="dot-line"></div>
+    </div>
+    <div class="sec-body">
+      <div class="sec-head">
+        <h3>メンバー自己紹介 ＆ プロジェクト紹介</h3>
+        <span class="en">Members &amp; Projects</span>
+        <span class="tbadge">⏱ 5–10 min</span>
+      </div>
+      <div class="members-legend">
+        <span class="legend-item"><span class="legend-dot lp"></span>JSPS PD</span>
+        <span class="legend-item"><span class="legend-dot ld"></span>博士課程</span>
+        <span class="legend-item"><span class="legend-dot lm"></span>修士課程</span>
+      </div>
+      <div class="members-flow">
+        <div class="m-card p">
+          <div class="m-role">JSPS PD</div>
+          <a href="https://michinorishimoji.github.io/mshimoji.com/member-fukaya.html" target="_blank" class="m-name-link">深谷 康佳</a>
+          <div class="m-name-en">Yasuka Fukaya</div>
+          <div class="m-topic"><b>ケラビット語</b>（ボルネオ）の総合的記述・辞書作成</div>
+        </div>
+        <div class="m-card d">
+          <div class="m-role">博士課程</div>
+          <a href="https://michinorishimoji.github.io/mshimoji.com/member-guay.html" target="_blank" class="m-name-link">Matthew Guay</a>
+          <div class="m-name-en"></div>
+          <div class="m-topic">南琉球八重山語<b>新城島方言</b>の記述。言語人類学。</div>
+          <div class="m-affil">流通経済大学 准教授</div>
+        </div>
+        <div class="m-card d">
+          <div class="m-role">博士課程 / JSPS</div>
+          <a href="https://michinorishimoji.github.io/mshimoji.com/member-hirosawa.html" target="_blank" class="m-name-link">廣澤 尚之</a>
+          <div class="m-name-en">Naoyuki Hirosawa</div>
+          <div class="m-topic">宮崎県椎葉村<b>尾前方言</b>の記述。日琉諸語の情報構造。</div>
+        </div>
+        <div class="m-card d">
+          <div class="m-role">博士課程</div>
+          <a href="https://michinorishimoji.github.io/mshimoji.com/member-monson.html" target="_blank" class="m-name-link">Max Monson</a>
+          <div class="m-name-en"></div>
+          <div class="m-topic">青森県津軽郡<b>深浦町方言</b>の総合的記述。</div>
+        </div>
+        <div class="m-card d">
+          <div class="m-role">博士課程</div>
+          <a href="https://michinorishimoji.github.io/mshimoji.com/member-marco.html" target="_blank" class="m-name-link">Marco Scotto<br>di Clemente</a>
+          <div class="m-name-en"></div>
+          <div class="m-topic">鹿児島県南九州市<b>頴娃町方言</b>の総合的記述。</div>
+        </div>
+        <div class="m-card d">
+          <div class="m-role">博士課程 / JSPS</div>
+          <a href="https://michinorishimoji.github.io/mshimoji.com/member-hamada.html" target="_blank" class="m-name-link">濱田 七海</a>
+          <div class="m-name-en">Nanami Hamada</div>
+          <div class="m-topic">北琉球奄美語<b>喜界島方言</b>の記述。言語再活性化。</div>
+        </div>
+        <div class="m-card m">
+          <div class="m-role">修士課程</div>
+          <a href="https://michinorishimoji.github.io/mshimoji.com/member-miwa.html" target="_blank" class="m-name-link">三輪 春佳</a>
+          <div class="m-name-en">Haruka Miwa</div>
+          <div class="m-topic"><b>韓国語</b>の情報構造。</div>
+        </div>
+        <div class="m-card m">
+          <div class="m-role">修士課程</div>
+          <a href="https://michinorishimoji.github.io/mshimoji.com/member-iwakuma.html" target="_blank" class="m-name-link">岩隈 航男</a>
+          <div class="m-name-en">Konan Iwakuma</div>
+          <div class="m-topic"><b>宮古語</b>と琉球列島の標準日本語変種の記述。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED FLOW -->
+  <div class="flow flow-feat">
+    <div class="flow-pill"><span>FEATURED</span> <span class="arrow">▼</span></div>
+  </div>
+
+  <!-- PART 03 FEATURED -->
+  <div class="featured">
+    <div class="feat-num">
+      <div class="num">03</div>
+      <div class="stime">30'</div>
+      <div class="dot-line"></div>
+    </div>
+    <div class="feat-body">
+
+      <div class="feat-overline">
+        <span class="feat-tag">ゼミの最前線</span>
+        <span class="tbadge-dark">⏱ 30 min</span>
+        <span class="line"></span>
+      </div>
+
+      <div class="feat-subtitle">危機言語の記述研究を「進化」させるために</div>
+      <div class="feat-title">危機言語研究へのNLP・計算言語学の援用</div>
+      <div class="feat-title-en">Integrating NLP &amp; Computational Linguistics into Endangered Language Research</div>
+
+      <div class="feat-research">
+        <div class="fr-box">
+          <h5><span class="ci">🔬</span> In Progress Research 1</h5>
+          <div class="fr-title">低資源危機言語の自動グロス付け<br>(Autoglossing)</div>
+          <p>
+            伊良部島方言の談話データ（わずか<strong>30分</strong>）を教師データとし、<strong>BiLSTM + CRF</strong> による形態素境界の自動認定と、<strong>Multi-Task Learning</strong> によるグロス・品詞の同時予測を実現。品詞→グロス予測の連鎖設計で、同音異義の文法形態素（例：<strong>ga</strong> = 主格 or 属格）を文脈から自動判別。
+          </p>
+          <div class="code-snippet">
+            <span class="comment"># BiLSTM+CRF → 形態素境界</span><br>
+            <span class="comment"># Multi-Task → POS + Gloss同時予測</span><br>
+            <span class="keyword">seg_accuracy</span> = <span class="string">97.2%</span> <span class="comment"># token</span><br>
+            <span class="keyword">gloss_f1</span>&nbsp;&nbsp;&nbsp;&nbsp;= <span class="string">0.882</span> <span class="comment"># w/ dict</span>
+          </div>
+          <a href="https://www.academia.edu/143686363/%E4%BD%8E%E8%B3%87%E6%BA%90%E8%A8%80%E8%AA%9E%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E8%87%AA%E5%8B%95%E8%A7%A3%E6%9E%90%E3%81%A8%E3%82%B0%E3%83%AD%E3%82%B9%E4%BB%98%E3%81%91%E3%81%AE%E8%87%AA%E5%8B%95%E5%8C%96_%E4%BC%8A%E8%89%AF%E9%83%A8%E5%B3%B6%E6%96%B9%E8%A8%80%E3%81%AE%E3%82%B1%E3%83%BC%E3%82%B9%E3%82%B9%E3%82%BF%E3%83%87%E3%82%A3" target="_blank" rel="noopener" class="fr-link">📄 論文を読む → Academia.edu</a>
+        </div>
+        <div class="fr-box">
+          <h5><span class="ci">🔬</span> In Progress Research 2</h5>
+          <div class="fr-title">宮古語フィラーの情報理論的分析</div>
+          <p>
+            話者が発話中に用いる「えー」「まー」などの<strong>フィラー・談話標識</strong>が、発話の<strong>情報量（surprisal）</strong>とどう関係するかを定量的に検証。自然談話コーパスに情報理論的指標を適用し、<strong>フィラー出現位置と情報量の相関</strong>を分析。
+          </p>
+          <div class="code-snippet">
+            <span class="comment"># surprisal = -log P(wᵢ | context)</span><br>
+            <span class="keyword">for</span> token <span class="keyword">in</span> miyako_corpus:<br>
+            &nbsp;&nbsp;s = <span class="keyword">-log</span> P(token | context)<br>
+            &nbsp;&nbsp;<span class="keyword">if</span> token.is_filler:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;analyze(s, <span class="string">"discourse_marker"</span>)
+          </div>
+          <a href="https://michinorishimoji.github.io/gengogakufest2026/" target="_blank" rel="noopener" class="fr-link">🎤 このあと詳しく → 発表ページへ</a>
+        </div>
+      </div>
+
+      <a href="https://michinorishimoji.github.io/mshimoji.com/index.html" target="_blank" rel="noopener" class="lab-link">
+        <span class="lab-icon">🌊</span>
+        <span class="lab-label">下地理則の研究室</span>
+        <span class="lab-url">michinorishimoji.github.io</span>
+        <span class="lab-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="poster-footer"></div>
+
+</div>
+</body>
+</html>
