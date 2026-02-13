@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///Users/michinorishimoji2023/Downloads/index%20(42).html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>話者の内省を引き出しにくい形式をどう記述すべきか：宮古語のフィラーを情報理論から分析する試論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="file:///Users/michinorishimoji2023/Downloads/index_files/css2" rel="stylesheet">
+<style>
+:root{
+  --bg:#f9f7f3;--card:#fff;--card2:#f3efe6;--text:#1e1a14;--body:#302a20;--muted:#7a6e5d;--dim:#a89b8a;
+  --red:#9e3a1e;--red-l:#f0d8cc;--red-bg:rgba(158,58,30,.06);
+  --grn:#1e6b54;--grn-l:#d0e8de;--blu:#1e4a7a;--blu-l:#d0ddef;
+  --pur:#6a3d7a;--pur-l:#e4d4ec;--gld:#8a6e1e;--gld-l:#f5ecd0;
+  --bdr:#ddd6c8;--bdr2:#ede8df;--hl:#fff7e0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:18px;}
+body{font-family:'BIZ UDGothic','Source Sans 3',sans-serif;background:var(--bg);color:var(--body);line-height:1.5;font-weight:400;-webkit-font-smoothing:antialiased;}
+.poster{display:grid;grid-template-columns:1fr;gap:16px;padding:32px;width:100%;max-width:1400px;margin:0 auto;}
+.banner{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 56px 40px;background:#0F1923;border:none;border-radius:6px;position:relative;overflow:hidden;}
+.banner::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(255,255,255,0.015) 3px,rgba(255,255,255,0.015) 4px),repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.01) 3px,rgba(255,255,255,0.01) 4px);}
+.banner h1{font-family:'Noto Serif JP',serif;font-size:48px;font-weight:900;color:#FFFFFF;line-height:1.3;letter-spacing:3px;position:relative;z-index:1;}
+.banner .sub{font-family:'Noto Sans JP',sans-serif;font-size:24px;color:#E86F56;margin-top:14px;font-weight:400;letter-spacing:2px;position:relative;z-index:1;}
+.banner .author{font-family:'Noto Sans JP',sans-serif;font-size:20px;color:rgba(255,255,255,0.55);margin-top:14px;letter-spacing:.03em;position:relative;z-index:1;}
+.panel{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:24px;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+.panel::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:6px 0 0 6px;}
+.panel.p-red::before{background:var(--red);}.panel.p-grn::before{background:var(--grn);}.panel.p-gld::before{background:var(--gld);}.panel.p-pur::before{background:var(--pur);}
+.panel .ph{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.panel.p-red .ph{color:var(--red);}.panel.p-grn .ph{color:var(--grn);}.panel.p-gld .ph{color:var(--gld);}.panel.p-pur .ph{color:var(--pur);}
+.panel h2{font-family:'Cormorant Garamond','Noto Serif JP',serif;font-size:27px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.35;}
+.panel h3{font-size:17px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px;}
+.panel p{font-size:18px;margin-bottom:8px;line-height:1.65;font-weight:400;}
+.panel .sm{font-size:18px;color:var(--muted);line-height:1.6;font-weight:400;}
+.panel table{width:100%;border-collapse:collapse;font-size:19px;margin:8px 0;}
+.panel th{text-align:left;font-size:17px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;padding:8px 12px;border-bottom:1px solid var(--bdr);white-space:nowrap;}
+.panel th.r{text-align:right;}
+.panel td{padding:8px 12px;border-bottom:1px solid var(--bdr2);vertical-align:middle;}
+.panel td.r{text-align:right;font-family:'JetBrains Mono',monospace;font-size:18px;}
+.panel tr:last-child td{border-bottom:none;}
+.panel tr.hl{background:var(--hl);}
+.panel tr.hb{background:rgba(30,74,122,.04);}
+.panel tr.hp{background:rgba(106,61,122,.04);}
+.m{font-family:'JetBrains Mono',monospace;font-size:16px;padding:4px 10px;border-radius:3px;font-weight:500;}
+.mm{background:var(--red-l);color:var(--red);}.mu{background:var(--blu-l);color:var(--blu);}.mn{background:var(--pur-l);color:var(--pur);}
+.kf{background:var(--red-bg);border:1px solid rgba(158,58,30,.15);border-radius:6px;padding:14px 16px;margin-top:auto;font-size:17px;line-height:1.6;font-weight:500;}
+.kf strong{color:var(--red);}
+.kf.p{background:rgba(106,61,122,.04);border-color:rgba(106,61,122,.15);}.kf.p strong{color:var(--pur);}
+.fm{background:var(--card2);border:1px solid var(--bdr);border-radius:6px;padding:10px 16px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--text);margin:8px 0;}
+.lg{display:flex;gap:12px;font-size:15px;margin:6px 0;justify-content:center;color:var(--muted);}
+.lg span{display:flex;align-items:center;gap:2px;}
+.lg .sw{width:10px;height:10px;border-radius:2px;display:inline-block;}
+code{font-family:'JetBrains Mono',monospace;font-size:16px;background:var(--card2);padding:4px 10px;border-radius:2px;color:var(--text);}
+</style>
+</head>
+<body>
+<div class="poster">
+
+<!-- Banner -->
+<div class="banner">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;position:relative;z-index:1;">
+    <span style="font-family:&#39;Source Sans 3&#39;,&#39;Noto Sans JP&#39;,sans-serif;font-size:17px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 18px;border-radius:2px;background:#C84B31;color:white;">B-06</span>
+    <span style="font-family:&#39;Source Sans 3&#39;,&#39;Noto Sans JP&#39;,sans-serif;font-size:17px;font-weight:700;letter-spacing:1px;padding:5px 18px;border-radius:2px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);">九州大学 人文科学研究院 言語学講座</span>
+  </div>
+  <h1>話者の内省を引き出しにくい形式を<br>どう記述すべきか</h1>
+  <div class="sub">宮古語のフィラーを情報理論から分析する試論</div>
+  <div class="author">下地理則（九州大学）</div>
+  <div style="font-size:17px;color:rgba(255,255,255,0.4);margin-top:8px;position:relative;z-index:1;">検証データはこちらから：<a href="https://github.com/MichinoriShimoji/gengogakufest2026" style="color:#d4a830;text-decoration:underline;">https://github.com/MichinoriShimoji/gengogakufest2026</a></div>
+</div>
+
+<!-- §1 Intro -->
+<div class="panel p-grn">
+  <div class="ph">§1 研究の問い</div>
+  <h2>宮古語<a href="https://www.google.com/maps/place/%E6%B2%96%E7%B8%84%E7%9C%8C%E5%AE%AE%E5%8F%A4%E5%B3%B6%E5%B8%82%E4%BC%8A%E8%89%AF%E9%83%A8/" style="color:inherit;text-decoration:none;">伊良部島方言<span style="font-size:.65em;color:var(--dim);vertical-align:middle;">（Map）</span></a>の<span class="m mm" style="font-size:inherit;padding:1px 5px;">mmja</span> / <span class="m mu" style="font-size:inherit;padding:1px 5px;">unu</span> / <span class="m mn" style="font-size:inherit;padding:1px 5px;">naugara</span>は同じ「フィラー」か？</h2>
+  <div style="display:grid;grid-template-columns:3fr 2fr;gap:24px;">
+    <div>
+      <div style="background:var(--card2);border:1px solid var(--bdr);border-radius:4px;padding:12px 14px;margin:4px 0;">
+        <div style="display:flex;align-items:flex-start;gap:0;font-family:&#39;JetBrains Mono&#39;,monospace;font-size:16px;line-height:1.7;">
+          <div style="color:var(--dim);font-size:15px;margin-right:8px;padding-top:2px;">(1)</div>
+          <div style="display:inline-flex;flex-wrap:wrap;gap:10px 16px;">
+            <div><div>aidu</div><div style="color:var(--muted);font-size:14px;">すると</div></div>
+            <div><div style="color:var(--red);font-weight:700;border-bottom:2px solid var(--red);">mmja</div><div style="color:var(--red);font-size:14px;">DSC</div></div>
+            <div><div style="color:var(--blu);font-weight:600;border-bottom:2px solid var(--blu);">unu</div><div style="color:var(--blu);font-size:14px;">FIL</div></div>
+            <div><div style="color:var(--pur);font-weight:600;border-bottom:2px solid var(--pur);">naugara</div><div style="color:var(--pur);font-size:14px;">FIL</div></div>
+            <div><div>kiban</div><div style="color:var(--muted);font-size:14px;">貧しい</div></div>
+            <div><div>kiban</div><div style="color:var(--muted);font-size:14px;">貧しい</div></div>
+            <div><div>nu</div><div style="color:var(--muted);font-size:14px;">GEN</div></div>
+            <div><div>pɨtu</div><div style="color:var(--muted);font-size:14px;">人</div></div>
+          </div>
+        </div>
+        <div style="font-size:15px;color:var(--body);margin-top:2px;padding-left:16px;">「すると、MMJA, UNU, NAUGARA, 貧しい人は（友達だったから）」</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--bdr);border-radius:4px;padding:12px 14px;margin:4px 0;">
+        <div style="display:flex;align-items:flex-start;gap:0;font-family:&#39;JetBrains Mono&#39;,monospace;font-size:16px;line-height:1.7;">
+          <div style="color:var(--dim);font-size:15px;margin-right:8px;padding-top:2px;">(2)</div>
+          <div style="display:inline-flex;flex-wrap:wrap;gap:10px 16px;">
+            <div><div>par-i-ba</div><div style="color:var(--muted);font-size:14px;">行く-CSL</div></div>
+            <div><div style="color:var(--red);font-weight:700;border-bottom:2px solid var(--red);">mmja</div><div style="color:var(--red);font-size:14px;">DSC</div></div>
+            <div><div>maju</div><div style="color:var(--muted);font-size:14px;">猫</div></div>
+            <div><div>nu</div><div style="color:var(--muted);font-size:14px;">NOM</div></div>
+            <div><div style="color:var(--blu);font-weight:600;border-bottom:2px solid var(--blu);">unu</div><div style="color:var(--blu);font-size:14px;">FIL</div></div>
+            <div><div>tabemunu</div><div style="color:var(--muted);font-size:14px;">食べ物</div></div>
+            <div><div>u</div><div style="color:var(--muted);font-size:14px;">ACC</div></div>
+            <div><div>ba…</div><div style="color:var(--muted);font-size:14px;">TOP</div></div>
+          </div>
+        </div>
+        <div style="font-size:15px;color:var(--body);margin-top:2px;padding-left:16px;">「行くからMMJA、猫が食べ物を（みんな食べてしまって）」</div>
+      </div>
+      <p class="sm" style="margin:3px 0 1px;">文内相対位置（語単位）:</p>
+      <svg viewBox="0 0 320 80" style="width:100%;">
+        <line x1="34" y1="62" x2="310" y2="62" stroke="var(--bdr)"></line>
+        <line x1="34" y1="4" x2="34" y2="62" stroke="var(--bdr)"></line>
+        <text x="29" y="65" text-anchor="end" font-size="7" fill="var(--dim)" font-family="JetBrains Mono">0</text>
+        <line x1="34" y1="43" x2="310" y2="43" stroke="var(--bdr2)" stroke-dasharray="1.5"></line>
+        <text x="29" y="46" text-anchor="end" font-size="7" fill="var(--dim)" font-family="JetBrains Mono">25%</text>
+        <line x1="34" y1="23" x2="310" y2="23" stroke="var(--bdr2)" stroke-dasharray="1.5"></line>
+        <text x="29" y="26" text-anchor="end" font-size="7" fill="var(--dim)" font-family="JetBrains Mono">50%</text>
+        <!-- ca/HS (green, behind) — word-level bins [0,0,0,0,0,2,0,0,1,53] n=56 -->
+        <rect x="172.0" y="59.2" width="5.5" height="2.8" fill="rgba(120,160,80,.15)" stroke="rgba(120,160,80,.5)" stroke-width=".6" rx="1"></rect>
+        <rect x="254.8" y="60.6" width="5.5" height="1.4" fill="rgba(120,160,80,.15)" stroke="rgba(120,160,80,.5)" stroke-width=".6" rx="1"></rect>
+        <rect x="282.4" y="4" width="5.5" height="58" fill="rgba(120,160,80,.15)" stroke="rgba(120,160,80,.5)" stroke-width=".6" rx="1"></rect>
+        <text x="290" y="3" text-anchor="middle" font-size="6.5" fill="rgba(120,160,80,.8)" font-family="JetBrains Mono">95%</text>
+        <!-- mmja (red) — word-level bins [27,20,15,23,16,14,18,14,9,14] n=170 -->
+        <rect x="40.5" y="49.6" width="5.5" height="12.4" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="68.1" y="52.8" width="5.5" height="9.2" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="95.7" y="55.1" width="5.5" height="6.9" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="123.3" y="51.4" width="5.5" height="10.6" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="150.9" y="54.7" width="5.5" height="7.3" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="178.5" y="55.6" width="5.5" height="6.4" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="206.1" y="53.7" width="5.5" height="8.3" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="233.7" y="55.6" width="5.5" height="6.4" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="261.3" y="57.9" width="5.5" height="4.1" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <rect x="288.9" y="55.6" width="5.5" height="6.4" fill="var(--red-l)" stroke="var(--red)" stroke-width=".6" rx="1"></rect>
+        <!-- unu (blue) — word-level bins [12,5,4,2,2,6,4,2,2,1] n=40 (INTJ only) -->
+        <rect x="47.0" y="38.6" width="5.5" height="23.4" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="74.6" y="52.3" width="5.5" height="9.8" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="102.2" y="54.2" width="5.5" height="7.8" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="129.8" y="58.1" width="5.5" height="3.9" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="157.4" y="58.1" width="5.5" height="3.9" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="185.0" y="50.3" width="5.5" height="11.7" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="212.6" y="54.2" width="5.5" height="7.8" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="240.2" y="58.1" width="5.5" height="3.9" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="267.8" y="58.1" width="5.5" height="3.9" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <rect x="295.4" y="60.0" width="5.5" height="2.0" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".6" rx="1"></rect>
+        <!-- naugara (purple) — word-level bins [1,2,7,1,2,1,3,1,0,4] n=22 -->
+        <rect x="53.5" y="58.5" width="5.5" height="3.5" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <rect x="81.1" y="54.9" width="5.5" height="7.1" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <rect x="108.7" y="37.2" width="5.5" height="24.8" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <rect x="136.3" y="58.5" width="5.5" height="3.5" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <rect x="163.9" y="54.9" width="5.5" height="7.1" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <rect x="191.5" y="58.5" width="5.5" height="3.5" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <rect x="219.1" y="51.4" width="5.5" height="10.6" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <rect x="246.7" y="58.5" width="5.5" height="3.5" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <rect x="301.9" y="47.8" width="5.5" height="14.2" fill="var(--pur-l)" stroke="var(--pur)" stroke-width=".6" rx="1"></rect>
+        <text x="46" y="74" text-anchor="middle" font-size="7.5" fill="var(--dim)" font-family="JetBrains Mono">文頭</text>
+        <text x="171" y="74" text-anchor="middle" font-size="7.5" fill="var(--dim)" font-family="JetBrains Mono">0.5</text>
+        <text x="295" y="74" text-anchor="middle" font-size="7.5" fill="var(--dim)" font-family="JetBrains Mono">文末</text>
+      </svg>
+      <div class="lg" style="margin:1px 0;">
+        <span><span class="sw" style="background:var(--red);"></span> mmja H′=.99</span>
+        <span><span class="sw" style="background:var(--blu);"></span> unu H′=.93</span>
+        <span><span class="sw" style="background:var(--pur);"></span> naugara H′=.90</span>
+        <span><span class="sw" style="background:rgba(120,160,80,.6);"></span> ca (HS) H′=.11</span>
+      </div>
+      <p class="sm">H′=正規化エントロピー（語単位, MM補正, 1.0=均等分布）。<span style="color:var(--red);font-weight:700;">mmja</span> (n=170) は平坦分布。<span style="color:var(--blu);font-weight:700;">unu</span> (n=40) は文頭偏重。<span style="color:var(--pur);font-weight:700;">naugara</span> (n=22) は前半にピーク・文末にも分散。ca/HS (n=56) は文末 95% に集中（対比用）。</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="background:#f0f0ec;border:1px solid #dddbd4;border-radius:4px;padding:5px 8px;line-height:1.6;">
+        <p style="margin:0;">パッと見ると似た分布をしているにもかかわらず、<span class="m mm">mmja</span> には <span class="m mu">unu</span> や <span class="m mn">naugara</span> にはない位置規則性や談話機能があるという<strong style="color:var(--text);">「エセ内省」</strong>が、私には<strong style="color:var(--red);font-size:18px;">ずーっと</strong>ある（下地 2018）。</p>
+      </div>
+      <div style="background:#f0f0ec;border:1px solid #dddbd4;border-radius:4px;padding:5px 8px;line-height:1.6;">
+        <p style="margin:0;">しかし「ここで <span class="m mm">mmja</span> は変ですか?」のような<strong style="color:var(--text);">内省判断の引き出しは困難</strong>で検証手段がない。</p>
+      </div>
+      <div style="background:#f0f0ec;border:1px solid #dddbd4;border-radius:4px;padding:5px 8px;line-height:1.6;">
+        <p style="margin:0;">より一般的には、フィールド言語学者が「フィラーっぽいやつ」をすべて <code>DSC</code> <code>FIL</code> と<strong style="color:var(--text);">雑にグロスを振って終わり</strong>にしがち。区別の妥当性を評価する方法論がない。</p>
+      </div>
+
+      <div style="background:var(--red-bg);border:1px solid rgba(158,58,30,.15);border-radius:4px;padding:6px 8px;">
+        <div style="font-size:18px;font-weight:700;color:var(--red);margin-bottom:1px;">提案</div>
+        <div style="font-size:18px;line-height:1.55;"><strong style="color:var(--text);">gzip圧縮法</strong>と<strong style="color:var(--text);">サプライザル</strong>（情報理論）により、内省に頼らずコーパスから差異を検出することを試みる。</div>
+      </div>
+      <p class="sm" style="margin-top:auto;border-top:1px solid var(--bdr);padding-top:4px;">下地理則 (2018)『南琉球宮古語伊良部島方言』くろしお出版</p>
+    </div>
+  </div>
+</div>
+
+<!-- コーパス -->
+<div class="panel p-grn">
+  <div class="ph">コーパス</div>
+  <h2>宮古語伊良部島方言 自然談話データ</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div>
+      <h3><a href="https://michinorishimoji.github.io/gengogakufest2026/docs/final.json" style="color:inherit;text-decoration:underline;text-decoration-color:var(--dim);text-underline-offset:2px;">データソース</a></h3>
+      <p>ELAN で転記・形態素解析済みの談話データを JSON に変換。</p>
+      <h3>JSON 構造</h3>
+      <div style="background:#1e1a14;border-radius:4px;padding:6px 8px;margin:6px 0;font-family:&#39;JetBrains Mono&#39;,monospace;font-size:14px;line-height:1.7;color:#a89b8a;">
+        <div style="color:#7a6e5d;">{ "utterances": [{ "words": [</div>
+        <div style="padding-left:12px;">
+          <div>{</div>
+          <div style="padding-left:10px;">
+            <span style="color:#d4a830;">"text"</span><span style="color:#7a6e5d;">:</span> <span style="color:#c8b890;">"par-i-ba"</span><span style="color:#7a6e5d;">,</span>
+          </div>
+          <div style="padding-left:10px;">
+            <span style="color:#d4a830;">"morph"</span><span style="color:#7a6e5d;">:</span> <span style="color:#c8b890;">"par+i+ba"</span><span style="color:#7a6e5d;">,</span>
+          </div>
+          <div style="padding-left:10px;">
+            <span style="color:#d4a830;">"gloss"</span><span style="color:#7a6e5d;">:</span> <span style="color:#c8b890;">"行く+CSL"</span><span style="color:#7a6e5d;">,</span>
+          </div>
+          <div style="padding-left:10px;background:rgba(158,58,30,.15);border-radius:2px;margin:1px -4px;padding:1px 4px 1px 10px;">
+            <span style="color:var(--red);font-weight:700;">"pos"</span><span style="color:#7a6e5d;">:</span> <span style="color:#f0d8cc;font-weight:600;">"V"</span>
+          </div>
+          <div>}<span style="color:#7a6e5d;">,</span></div>
+          <div>{</div>
+          <div style="padding-left:10px;">
+            <span style="color:#d4a830;">"text"</span><span style="color:#7a6e5d;">:</span> <span style="color:#f0d8cc;font-weight:600;">"mmja"</span><span style="color:#7a6e5d;">,</span>
+          </div>
+          <div style="padding-left:10px;">
+            <span style="color:#d4a830;">"morph"</span><span style="color:#7a6e5d;">:</span> <span style="color:#c8b890;">"mmja"</span><span style="color:#7a6e5d;">,</span>
+          </div>
+          <div style="padding-left:10px;">
+            <span style="color:#d4a830;">"gloss"</span><span style="color:#7a6e5d;">:</span> <span style="color:#c8b890;">"DSC"</span><span style="color:#7a6e5d;">,</span>
+          </div>
+          <div style="padding-left:10px;background:rgba(158,58,30,.15);border-radius:2px;margin:1px -4px;padding:1px 4px 1px 10px;">
+            <span style="color:var(--red);font-weight:700;">"pos"</span><span style="color:#7a6e5d;">:</span> <span style="color:#f0d8cc;font-weight:600;">"INTJ"</span> <span style="color:var(--red);font-size:11px;">← 決定的に重要</span>
+          </div>
+          <div>}<span style="color:#7a6e5d;">, ...</span></div>
+        </div>
+        <div style="color:#7a6e5d;">]}]}</div>
+      </div>
+      <p class="sm"><strong style="color:var(--red);">pos</strong>（品詞）が圧縮法・サプライザル両分析の基盤。形態素の統語的役割を encode する唯一のフィールド。</p>
+    </div>
+    <div>
+      <h3>規模</h3>
+      <table>
+        <tbody>
+          <tr><td>発話数</td><td class="r" style="font-weight:600;">774</td></tr>
+          <tr><td>形態素数</td><td class="r">6,412</td></tr>
+          <tr><td>語数</td><td class="r" style="font-weight:600;">4,746</td></tr>
+          <tr><td>品詞数</td><td class="r">28</td></tr>
+        </tbody>
+      </table>
+      <h3>対象形式</h3>
+      <table>
+        <tbody>
+          <tr class="hl"><td><span class="m mm">mmja</span></td><td class="r" style="font-weight:600;">170</td><td class="sm" style="border:none;">DSC</td></tr>
+          <tr class="hb"><td><span class="m mu">unu</span></td><td class="r">40</td><td class="sm" style="border:none;">FIL</td></tr>
+          <tr class="hp"><td><span class="m mn">naugara</span></td><td class="r">23</td><td class="sm" style="border:none;">FIL</td></tr>
+        </tbody>
+      </table>
+      <h3>分析の視点：品詞の遷移</h3>
+      <div style="background:var(--card2);border:1px solid var(--bdr);border-radius:4px;padding:8px;margin:6px 0;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:0;font-family:&#39;JetBrains Mono&#39;,monospace;font-size:16px;">
+          <div style="text-align:center;">
+            <div style="color:var(--muted);font-size:12px;">par-i-ba</div>
+            <div style="background:var(--card);border:1.5px solid var(--bdr);border-radius:4px;padding:8px 12px;font-weight:700;color:var(--text);">V</div>
+          </div>
+          <div style="color:var(--dim);padding:0 3px;font-size:16px;">→</div>
+          <div style="text-align:center;">
+            <div style="color:var(--red);font-size:12px;font-weight:600;">mmja</div>
+            <div style="background:var(--red-l);border:1.5px solid var(--red);border-radius:4px;padding:8px 12px;font-weight:700;color:var(--red);">INTJ</div>
+          </div>
+          <div style="color:var(--dim);padding:0 3px;font-size:16px;">→</div>
+          <div style="text-align:center;">
+            <div style="color:var(--muted);font-size:12px;">maju</div>
+            <div style="background:var(--card);border:1.5px solid var(--bdr);border-radius:4px;padding:8px 12px;font-weight:700;color:var(--text);">N</div>
+          </div>
+          <div style="color:var(--dim);padding:0 3px;font-size:16px;">→</div>
+          <div style="text-align:center;">
+            <div style="color:var(--muted);font-size:12px;">nu</div>
+            <div style="background:var(--card);border:1.5px solid var(--bdr);border-radius:4px;padding:8px 12px;font-weight:700;color:var(--text);">CP</div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:6px;font-size:15px;color:var(--muted);">
+          この<strong style="color:var(--red);">品詞列の遷移パターン</strong>に規則性があるか？<br>
+          INTJ の後にどんな品詞が来やすいか？ — を統計的に検証する
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §2 Compression -->
+<div class="panel p-red">
+  <div class="ph">§2 位置規則性</div>
+  <h2>圧縮シャッフル検定 + ブートストラップ信頼区間</h2>
+  <p class="sm" style="font-size:16px;line-height:1.6;">各節（EOS/EAC/EQC 区切り, 858節）を語単位に分割。非ターゲット語の POS 列を固定し、<code>TGT_</code> マーカーの挿入位置のみを一様ランダムに並べ替え 500回 → gzip 圧縮サイズを比較。さらに節をリサンプリングする<strong>ブートストラップ法</strong>（1000回）で Δ/n の 95% 信頼区間を算出。</p>
+
+  <div class="fm" style="font-size:20px;">z = (C<sub>orig</sub> − μ<sub>shuf</sub>) / σ<sub>shuf</sub></div>
+
+  <!-- Encoding example box -->
+  <div style="background:var(--card2);border:1px solid var(--bdr);border-radius:4px;padding:6px 8px;margin-top:4px;">
+    <div style="font-size:15px;color:var(--muted);margin-bottom:3px;">例: 発話 <code>V mmja N CP V</code></div>
+    <table style="font-size:15px;margin:0;">
+      <tbody><tr><td style="font-weight:600;color:var(--text);padding:1px 4px;border:none;white-space:nowrap;">元データ</td><td style="padding:1px 3px;border:none;"><code>V___</code></td><td style="padding:1px 3px;border:none;background:var(--red-l);border-radius:2px;"><code style="color:var(--red);background:none;font-weight:700;">TGT_</code></td><td style="padding:1px 3px;border:none;"><code>N___</code></td><td style="padding:1px 3px;border:none;"><code>CP__</code></td><td style="padding:1px 3px;border:none;"><code>V___</code></td></tr>
+      <tr><td style="font-weight:600;color:var(--muted);padding:1px 4px;border:none;white-space:nowrap;">shuf 例1</td><td style="padding:1px 3px;border:none;"><code>V___</code></td><td style="padding:1px 3px;border:none;"><code>N___</code></td><td style="padding:1px 3px;border:none;background:var(--red-l);border-radius:2px;"><code style="color:var(--red);background:none;font-weight:700;">TGT_</code></td><td style="padding:1px 3px;border:none;"><code>CP__</code></td><td style="padding:1px 3px;border:none;"><code>V___</code></td></tr>
+      <tr><td style="font-weight:600;color:var(--muted);padding:1px 4px;border:none;white-space:nowrap;">shuf 例2</td><td style="padding:1px 3px;border:none;background:var(--red-l);border-radius:2px;"><code style="color:var(--red);background:none;font-weight:700;">TGT_</code></td><td style="padding:1px 3px;border:none;"><code>N___</code></td><td style="padding:1px 3px;border:none;"><code>V___</code></td><td style="padding:1px 3px;border:none;"><code>CP__</code></td><td style="padding:1px 3px;border:none;"><code>V___</code></td></tr>
+    </tbody></table>
+    <p class="sm" style="margin:4px 0 0;line-height:1.6;font-size:16px;">語を入れ替えるのではなく、<strong style="color:var(--text);"><code>TGT_</code> マーカーの位置</strong>をランダムに選び直す。非ターゲット語の POS 列は固定。gzip はバイト列の繰り返しパターンを検出するため、<code>TGT_</code> が特定の POS 文脈に偏って出現するほど圧縮が効く。シャッフルでその噛み合いが壊れると圧縮サイズが増大する。</p>
+  </div>
+
+  <!-- Results table with bootstrap CI -->
+  <table style="margin-top:8px;">
+    <thead>
+      <tr><th></th><th class="r">n</th><th class="r">z</th><th class="r">Δ/n</th><th class="r">95% CI</th><th class="r"></th></tr>
+    </thead>
+    <tbody>
+      <tr class="hl"><td><span class="m mm">mmja</span></td><td class="r">170</td><td class="r" style="color:var(--red);font-weight:700;">−3.09</td><td class="r">−0.22</td><td class="r" style="font-size:14px;">[−0.21, −0.05]</td><td class="r" style="color:var(--red);font-weight:600;">*</td></tr>
+      <tr class="hb"><td><span class="m mu">unu</span></td><td class="r">40</td><td class="r">−1.88</td><td class="r">−0.29</td><td class="r" style="font-size:14px;">[−0.40, +0.08]</td><td class="r">n.s.</td></tr>
+      <tr><td><span class="m mn">naugara</span></td><td class="r">22</td><td class="r">−1.36</td><td class="r">−0.33</td><td class="r" style="font-size:14px;">[−0.60, +0.04]</td><td class="r">n.s.</td></tr>
+    </tbody>
+  </table>
+  <p class="sm" style="font-size:15px;">Δ/n = 1語あたり圧縮効果 (bytes)。CI = ブートストラップ 95% 信頼区間 (節リサンプリング ×1000)。</p>
+
+  <!-- CI visualization (compact) -->
+  <svg viewBox="0 0 340 80" style="width:55%;margin:4px auto;display:block;">
+    <line x1="70" y1="68" x2="320" y2="68" stroke="var(--bdr)" stroke-width=".5"></line>
+    <line x1="270" y1="8" x2="270" y2="68" stroke="var(--dim)" stroke-width="1" stroke-dasharray="4,2"></line>
+    <text x="270" y="78" text-anchor="middle" font-size="9.5" fill="var(--dim)" font-family="JetBrains Mono">0</text>
+    <text x="120" y="78" text-anchor="middle" font-size="8.5" fill="var(--dim)" font-family="JetBrains Mono">−0.4</text>
+    <text x="195" y="78" text-anchor="middle" font-size="8.5" fill="var(--dim)" font-family="JetBrains Mono">−0.2</text>
+    <text x="10" y="23" font-size="10.5" fill="var(--red)" font-family="Source Sans 3" font-weight="700">mmja</text>
+    <line x1="200" y1="20" x2="254" y2="20" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"></line>
+    <circle cx="198" cy="20" r="3.5" fill="var(--red)"></circle>
+    <line x1="200" y1="16" x2="200" y2="24" stroke="var(--red)" stroke-width="1.2"></line>
+    <line x1="254" y1="16" x2="254" y2="24" stroke="var(--red)" stroke-width="1.2"></line>
+    <text x="10" y="43" font-size="10.5" fill="var(--blu)" font-family="Source Sans 3" font-weight="700">unu</text>
+    <line x1="138" y1="40" x2="296" y2="40" stroke="var(--blu)" stroke-width="2.5" stroke-linecap="round" opacity=".5"></line>
+    <circle cx="174" cy="40" r="3.5" fill="var(--blu)" opacity=".7"></circle>
+    <line x1="138" y1="36" x2="138" y2="44" stroke="var(--blu)" stroke-width="1.2" opacity=".5"></line>
+    <line x1="296" y1="36" x2="296" y2="44" stroke="var(--blu)" stroke-width="1.2" opacity=".5"></line>
+    <text x="10" y="63" font-size="10.5" fill="var(--pur)" font-family="Source Sans 3" font-weight="700">naugara</text>
+    <line x1="72" y1="60" x2="282" y2="60" stroke="var(--pur)" stroke-width="2.5" stroke-linecap="round" opacity=".5"></line>
+    <circle cx="162" cy="60" r="3.5" fill="var(--pur)" opacity=".7"></circle>
+    <line x1="72" y1="56" x2="72" y2="64" stroke="var(--pur)" stroke-width="1.2" opacity=".5"></line>
+    <line x1="282" y1="56" x2="282" y2="64" stroke="var(--pur)" stroke-width="1.2" opacity=".5"></line>
+  </svg>
+  <p class="sm" style="text-align:center;">●=Δ/n 点推定、横線=95% CI。ゼロ線を含まない → 有意。</p>
+
+  <!-- Shuffle distribution histograms (compact 2x2) -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin:4px auto;max-width:75%;">
+    <svg viewBox="0 0 200 92" style="width:100%;">
+      <text x="100" y="10" text-anchor="middle" font-size="9.5" fill="var(--text)" font-family="Source Sans 3" font-weight="600">mmja  z=−3.09  ✓</text>
+      <line x1="30" y1="74" x2="195" y2="74" stroke="var(--bdr)"></line><line x1="30" y1="14" x2="30" y2="74" stroke="var(--bdr)"></line>
+      <rect x="30.0" y="72.9" width="12.8" height="1.1" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="43.8" y="69.2" width="12.8" height="4.8" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="57.5" y="56.9" width="12.8" height="17.1" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="71.3" y="42.9" width="12.8" height="31.1" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="85.0" y="35.4" width="12.8" height="38.6" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="98.8" y="36.0" width="12.8" height="38.0" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="112.5" y="14.0" width="12.8" height="60.0" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="126.3" y="40.3" width="12.8" height="33.8" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="140.0" y="45.1" width="12.8" height="28.9" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="153.8" y="64.9" width="12.8" height="9.1" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="167.5" y="70.3" width="12.8" height="3.8" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="181.3" y="72.4" width="12.8" height="1.6" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <line x1="30.0" y1="12" x2="30.0" y2="76" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="3,2"></line>
+      <text x="36" y="86" font-size="8.5" fill="var(--red)" font-family="JetBrains Mono" font-weight="600">orig</text>
+    </svg>
+    <svg viewBox="0 0 200 92" style="width:100%;">
+      <text x="100" y="10" text-anchor="middle" font-size="9.5" fill="var(--text)" font-family="Source Sans 3" font-weight="600">unu  z=−1.88  n.s.</text>
+      <line x1="30" y1="74" x2="195" y2="74" stroke="var(--bdr)"></line><line x1="30" y1="14" x2="30" y2="74" stroke="var(--bdr)"></line>
+      <rect x="30.0" y="70.6" width="12.8" height="3.4" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="43.8" y="65.2" width="12.8" height="8.8" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="57.5" y="58.5" width="12.8" height="15.5" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="71.3" y="42.3" width="12.8" height="31.7" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="85.0" y="32.2" width="12.8" height="41.8" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="98.8" y="14.0" width="12.8" height="60.0" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="112.5" y="20.1" width="12.8" height="53.9" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="126.3" y="26.8" width="12.8" height="47.2" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="140.0" y="28.8" width="12.8" height="45.2" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="153.8" y="56.5" width="12.8" height="17.5" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="167.5" y="63.9" width="12.8" height="10.1" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="181.3" y="72.0" width="12.8" height="2.0" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <line x1="62.1" y1="12" x2="62.1" y2="76" stroke="var(--blu)" stroke-width="1.5" stroke-dasharray="3,2"></line>
+      <text x="62.1" y="86" text-anchor="middle" font-size="8.5" fill="var(--blu)" font-family="JetBrains Mono" font-weight="600">orig</text>
+    </svg>
+    <svg viewBox="0 0 200 92" style="width:100%;">
+      <text x="100" y="10" text-anchor="middle" font-size="9.5" fill="var(--text)" font-family="Source Sans 3" font-weight="600">naugara  z=−1.36  n.s.</text>
+      <line x1="30" y1="74" x2="195" y2="74" stroke="var(--bdr)"></line><line x1="30" y1="14" x2="30" y2="74" stroke="var(--bdr)"></line>
+      <rect x="30.0" y="73.5" width="12.8" height="0.5" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="57.5" y="69.9" width="12.8" height="4.1" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="71.3" y="62.7" width="12.8" height="11.3" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="85.0" y="46.8" width="12.8" height="27.2" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="98.8" y="39.1" width="12.8" height="34.9" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="112.5" y="17.1" width="12.8" height="56.9" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="126.3" y="14.0" width="12.8" height="60.0" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="140.0" y="46.8" width="12.8" height="27.2" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="153.8" y="52.5" width="12.8" height="21.5" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="167.5" y="64.8" width="12.8" height="9.2" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <rect x="181.3" y="70.4" width="12.8" height="3.6" fill="var(--blu-l)" stroke="var(--blu)" stroke-width=".4" rx="1"></rect>
+      <line x1="71.3" y1="12" x2="71.3" y2="76" stroke="var(--pur)" stroke-width="1.5" stroke-dasharray="3,2"></line>
+      <text x="71.3" y="86" text-anchor="middle" font-size="8.5" fill="var(--pur)" font-family="JetBrains Mono" font-weight="600">orig</text>
+    </svg>
+  </div>
+  <p class="sm" style="text-align:center;">破線=元データ圧縮サイズ。mmja は分布の左端外、unu・naugara は分布内。</p>
+
+  <!-- Interpretation box -->
+  <div style="background:var(--red-bg);border-left:3px solid var(--red);border-radius:0 4px 4px 0;padding:5px 8px;margin-top:6px;">
+    <div style="font-size:16px;font-weight:700;color:var(--red);margin-bottom:3px;">解釈</div>
+    <div style="font-size:16px;line-height:1.65;">
+      <strong>mmja</strong> は CI がゼロを含まず、節内の位置に統計的に有意な規則性がある。<br>
+      <strong>unu</strong>（n=40）・<strong>naugara</strong>（n=22）は CI がゼロをまたぎ、<strong>検出力不足で判断不能</strong>。点推定は規則性方向だが、標本が小さく効果の有無を結論できない。
+    </div>
+  </div>
+</div>
+<div class="panel p-gld">
+  <div class="ph">§5 情報密度</div>
+  <h2>サプライザル <span style="font-size:18px;font-weight:400;color:var(--muted);">（前の語から次の語がどれだけ予測しにくいか）</span></h2>
+  <div class="fm" style="font-size:20px;">S(w<sub>i</sub>) = −log₂ P(w<sub>i</sub> | w<sub>i−1</sub>)   S̄<sub>corpus</sub> = 4.95 bits</div>
+
+  <!-- Surprisal illustration with real example -->
+  <div style="background:rgba(138,110,30,.04);border:1px solid rgba(138,110,30,.12);border-radius:5px;padding:6px 8px;margin:4px 0;">
+    <div style="font-size:19px;color:var(--muted);margin-bottom:6px;font-weight:600;">実例で理解するサプライザル <span style="font-size:14px;font-weight:400;">（= 例文 2, 語単位バイグラム）</span></div>
+    <svg viewBox="0 0 340 120" style="width:64%;margin:0 auto;display:block;">
+      <defs>
+        <marker id="arr" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4" fill="none" stroke="var(--dim)" stroke-width=".6"></path></marker>
+        <marker id="arrR" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4" fill="none" stroke="var(--red)" stroke-width=".8"></path></marker>
+      </defs>
+
+      <!-- Word centers: 28, 82, 142, 196, 248, 306 -->
+      <!-- Bars: S×6.5 height, baseline y=87 (+15 shift) -->
+
+      <!-- Corpus mean S̄=4.95 → y = 87 - 4.95*6.5 = 54.8 -->
+      <line x1="55" y1="55" x2="328" y2="55" stroke="var(--dim)" stroke-width=".6" stroke-dasharray="3,2"></line>
+      <text x="332" y="56" font-size="7" fill="var(--dim)" font-family="JetBrains Mono">S̄=4.95</text>
+
+      <!-- Bar: par  S=5.62  h=36.5  y=50.5 -->
+      <rect x="14" y="50" width="28" height="37" fill="rgba(160,160,160,.12)" stroke="rgba(160,160,160,.4)" stroke-width=".5" rx="2"></rect>
+      <text x="28" y="46" text-anchor="middle" font-size="8" fill="var(--dim)" font-family="JetBrains Mono">5.62</text>
+
+      <!-- Bar: mmja  S=4.43  h=28.8  y=58.2  (LOW → green) -->
+      <rect x="68" y="58" width="28" height="29" fill="rgba(80,140,80,.12)" stroke="rgba(80,140,80,.5)" stroke-width=".5" rx="2"></rect>
+      <text x="82" y="54" text-anchor="middle" font-size="8" fill="rgba(80,140,80,.9)" font-family="JetBrains Mono" font-weight="600">4.43</text>
+
+      <!-- EAC boundary marker -->
+      <line x1="108" y1="83" x2="108" y2="93" stroke="var(--red)" stroke-width="1" stroke-dasharray="2,1.5"></line>
+      <text x="108" y="115" text-anchor="middle" font-size="6.5" fill="var(--red)" font-weight="500">EAC</text>
+
+      <!-- Annotation: 予測困難 above 8.91 -->
+      <text x="142" y="12" text-anchor="middle" font-size="8" fill="var(--red)" font-weight="600">予測困難</text>
+
+      <!-- Bar: maju  S=8.91  h=57.9  y=29.1  (HIGH → red) -->
+      <rect x="128" y="29" width="28" height="58" fill="var(--red-l)" stroke="var(--red)" stroke-width=".8" rx="2"></rect>
+      <text x="142" y="24" text-anchor="middle" font-size="9.5" fill="var(--red)" font-family="JetBrains Mono" font-weight="700">8.91</text>
+
+      <!-- Bar: nu  S=3.67  h=23.9  y=63.1 -->
+      <rect x="182" y="63" width="28" height="24" fill="rgba(160,160,160,.12)" stroke="rgba(160,160,160,.4)" stroke-width=".5" rx="2"></rect>
+      <text x="196" y="59" text-anchor="middle" font-size="8" fill="var(--dim)" font-family="JetBrains Mono">3.67</text>
+
+      <!-- Bar: unu  S=6.58  h=42.8  y=44.2 -->
+      <rect x="234" y="44" width="28" height="43" fill="rgba(30,100,180,.1)" stroke="var(--blu)" stroke-width=".6" rx="2"></rect>
+      <text x="248" y="40" text-anchor="middle" font-size="8" fill="var(--blu)" font-family="JetBrains Mono" font-weight="600">6.58</text>
+
+      <!-- Bar: tabemunu  S=6.11  h=39.7  y=47.3 -->
+      <rect x="290" y="47" width="32" height="40" fill="rgba(160,160,160,.12)" stroke="rgba(160,160,160,.4)" stroke-width=".5" rx="2"></rect>
+      <text x="306" y="43" text-anchor="middle" font-size="8" fill="var(--dim)" font-family="JetBrains Mono">6.11</text>
+
+      <!-- Words row: y=97 -->
+      <text x="28" y="97" text-anchor="middle" font-size="9" fill="var(--body)" font-family="JetBrains Mono">par</text>
+      <text x="82" y="97" text-anchor="middle" font-size="10" fill="var(--red)" font-family="JetBrains Mono" font-weight="700">mmja</text>
+      <text x="142" y="97" text-anchor="middle" font-size="9" fill="var(--body)" font-family="JetBrains Mono">maju</text>
+      <text x="196" y="97" text-anchor="middle" font-size="9" fill="var(--body)" font-family="JetBrains Mono">nu</text>
+      <text x="248" y="97" text-anchor="middle" font-size="9" fill="var(--blu)" font-family="JetBrains Mono" font-weight="600">unu</text>
+      <text x="306" y="97" text-anchor="middle" font-size="7.5" fill="var(--body)" font-family="JetBrains Mono">tabemunu</text>
+
+      <!-- Gloss row: y=107 -->
+      <text x="28" y="107" text-anchor="middle" font-size="8" fill="var(--muted)">行く</text>
+      <text x="82" y="107" text-anchor="middle" font-size="8" fill="var(--red)" font-weight="600">DSC</text>
+      <text x="142" y="107" text-anchor="middle" font-size="8" fill="var(--muted)">猫</text>
+      <text x="196" y="107" text-anchor="middle" font-size="8" fill="var(--muted)">NOM</text>
+      <text x="248" y="107" text-anchor="middle" font-size="8" fill="var(--blu)">FIL</text>
+      <text x="306" y="107" text-anchor="middle" font-size="8" fill="var(--muted)">食べ物</text>
+
+      <!-- Arrows between words at y=94 -->
+      <path d="M42,94 L64,94" stroke="var(--dim)" stroke-width=".6" marker-end="url(#arr)"></path>
+      <path d="M96,94 L124,94" stroke="var(--red)" stroke-width=".8" marker-end="url(#arrR)"></path>
+      <path d="M156,94 L178,94" stroke="var(--dim)" stroke-width=".6" marker-end="url(#arr)"></path>
+      <path d="M210,94 L230,94" stroke="var(--dim)" stroke-width=".6" marker-end="url(#arr)"></path>
+      <path d="M262,94 L286,94" stroke="var(--dim)" stroke-width=".6" marker-end="url(#arr)"></path>
+
+      <!-- Annotation: low self-surprisal -->
+      <text x="82" y="70" text-anchor="middle" font-size="6.5" fill="rgba(80,140,80,.9)">予測容易</text>
+    </svg>
+    <div style="font-family:&#39;Noto Sans JP&#39;,sans-serif;font-size:17px;color:var(--body);line-height:1.7;margin-top:8px;padding:10px 14px;background:var(--card2);border-radius:6px;border:1px solid var(--bdr);">
+      バーの高さ = その語のサプライザル（前の語からの予測しにくさ）。mmja 自体は予測しやすい（S=4.43, S̄以下）が、<strong style="color:var(--red);">mmja の直後は予測困難</strong>（S=8.91）。節境界を挟み新情報（「猫が…」）がここから始まる。
+    </div>
+  </div>
+
+  <svg viewBox="0 0 300 125" style="width:60%;margin:0 auto;display:block;">
+    <line x1="40" y1="10" x2="40" y2="98" stroke="var(--bdr)"></line>
+    <line x1="40" y1="98" x2="282" y2="98" stroke="var(--bdr)"></line>
+    <!-- Y: 3→98, 7→10; scale=88/4=22/bit; y=98-(v-3)*22 -->
+    <text x="34" y="14" text-anchor="end" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono">7</text>
+    <text x="34" y="36" text-anchor="end" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono">6</text>
+    <text x="34" y="58" text-anchor="end" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono">5</text>
+    <text x="34" y="76" text-anchor="end" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono">4</text>
+    <line x1="40" y1="32" x2="282" y2="32" stroke="var(--bdr2)" stroke-dasharray="2"></line>
+    <line x1="40" y1="54" x2="282" y2="54" stroke="var(--bdr2)" stroke-dasharray="2"></line>
+    <line x1="40" y1="76" x2="282" y2="76" stroke="var(--bdr2)" stroke-dasharray="2"></line>
+    <!-- X: -2=88, -1=136, 0=184, +1=232, +2=280 -->
+    <text x="88" y="110" text-anchor="middle" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono">−2</text>
+    <text x="136" y="110" text-anchor="middle" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono">−1</text>
+    <text x="184" y="110" text-anchor="middle" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono" font-weight="600">0</text>
+    <text x="232" y="110" text-anchor="middle" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono">+1</text>
+    <text x="280" y="110" text-anchor="middle" font-size="8.5" fill="var(--muted)" font-family="JetBrains Mono">+2</text>
+    <rect x="174" y="8" width="20" height="92" fill="var(--gld-l)" opacity=".2" rx="2"></rect>
+    <!-- Corpus 4.95: y=98-(1.95*22)=98-42.9=55 -->
+    <line x1="88" y1="55" x2="280" y2="55" stroke="var(--dim)" stroke-width=".7" stroke-dasharray="3,3"></line>
+    <text x="288" y="55" font-size="7.5" fill="var(--dim)" font-family="JetBrains Mono">S̄</text>
+    <!-- mmja: -2:5.01→54, -1:4.70→61, 0:3.99→76, +1:6.80→14, +2:3.77→81 -->
+    <polyline points="88,54 136,61 184,76 232,14 280,81" fill="none" stroke="var(--red)" stroke-width="2" stroke-linejoin="round"></polyline>
+    <circle cx="232" cy="17" r="3.5" fill="var(--red)" stroke="#fff" stroke-width="1"></circle>
+    <rect x="236" y="1" width="30" height="13" rx="3" fill="var(--red-l)"></rect>
+    <text x="251" y="11" text-anchor="middle" font-size="9.5" fill="var(--red)" font-family="JetBrains Mono" font-weight="700">6.80</text>
+    <!-- unu: -2:4.79→59, -1:4.64→62, 0:4.90→56, +1:5.68→39, +2:3.83→80 -->
+    <polyline points="88,59 136,62 184,56 232,39 280,80" fill="none" stroke="var(--blu)" stroke-width="1.5" stroke-linejoin="round"></polyline>
+    <circle cx="232" cy="36" r="2.5" fill="var(--blu)"></circle>
+    <rect x="236" y="27" width="30" height="12" rx="3" fill="var(--blu-l)"></rect>
+    <text x="251" y="36" text-anchor="middle" font-size="8.5" fill="var(--blu)" font-family="JetBrains Mono">5.68</text>
+    <!-- nau: -2:5.24→49, -1:3.70→83, 0:6.19→28, +1:4.67→61, +2:3.38→90 -->
+    <polyline points="88,49 136,83 184,28 232,61 280,90" fill="none" stroke="var(--pur)" stroke-width="1.2" stroke-dasharray="4,2" stroke-linejoin="round"></polyline>
+    <circle cx="232" cy="57" r="2" fill="var(--pur)"></circle>
+    <rect x="236" y="50" width="30" height="12" rx="3" fill="var(--pur-l)"></rect>
+    <text x="251" y="59" text-anchor="middle" font-size="8.5" fill="var(--pur)" font-family="JetBrains Mono">4.67</text>
+    <text x="184" y="121" text-anchor="middle" font-size="8.5" fill="var(--muted)" font-family="Source Sans 3">オフセット（語）</text>
+  </svg>
+  <div class="lg">
+    <span><span class="sw" style="background:var(--red)"></span> mmja</span>
+    <span><span class="sw" style="background:var(--blu)"></span> unu</span>
+    <span><span class="sw" style="background:var(--pur)"></span> naugara</span>
+    <span style="color:var(--dim);">– – S̄</span>
+  </div>
+  <table>
+    <thead><tr><th></th><th class="r">pre</th><th class="r">self</th><th class="r">post</th><th class="r">d</th><th class="r">p</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td><span class="m mm">mmja</span></td><td class="r">4.70</td><td class="r">3.99</td><td class="r" style="color:var(--red);font-weight:700;">6.80</td><td class="r" style="font-weight:600;">0.81</td><td class="r">&lt;.0001</td></tr>
+      <tr class="hb"><td><span class="m mu">unu</span></td><td class="r">4.64</td><td class="r">4.90</td><td class="r">5.68</td><td class="r">0.32</td><td class="r">&lt;.0001</td></tr>
+      <tr class="hp"><td><span class="m mn">naugara</span></td><td class="r">3.70</td><td class="r">6.19</td><td class="r">4.67</td><td class="r">−.12</td><td class="r">&lt;.0001</td></tr>
+    </tbody>
+  </table>
+  <p class="sm">d=Cohen's d（post vs corpus mean）。p=Wilcoxon（Bonferroni 補正済み）。文全体の難しさとは無相関（ρ=.015）。</p>
+
+  <div class="kf" style="border-color:rgba(138,110,30,.15);background:rgba(138,110,30,.04);font-size:19px;">
+    <strong style="color:var(--gld);">mmja は低→高密度の遷移点に出現。</strong>naugara は逆方向（d=−.12）で非制御的な言い淀みの可能性があるが n=23 で要追加データ。
+  </div>
+</div>
+
+<!-- §7 Subtype -->
+<div class="panel p-pur">
+  <div class="ph">§7 サブタイプ分離</div>
+  <h2>三形式の情報密度勾配</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+    <div>
+      <div style="display:flex;align-items:center;gap:3px;margin:4px 0;">
+        <div style="flex:1;text-align:center;padding:6px 3px;background:var(--red-l);border:1.5px solid var(--red);border-radius:4px;">
+          <div style="font-family:&#39;JetBrains Mono&#39;;font-size:17px;font-weight:700;color:var(--red);">6.80</div>
+          <div style="font-size:14px;color:var(--red);font-weight:600;">mmja</div>
+          <div style="font-size:11px;color:var(--muted);">d=0.81</div>
+        </div>
+        <div style="color:var(--dim);font-size:18px;">›</div>
+        <div style="flex:1;text-align:center;padding:6px 3px;background:var(--blu-l);border:1.5px solid var(--blu);border-radius:4px;">
+          <div style="font-family:&#39;JetBrains Mono&#39;;font-size:17px;font-weight:700;color:var(--blu);">5.68</div>
+          <div style="font-size:14px;color:var(--blu);font-weight:600;">unu</div>
+          <div style="font-size:11px;color:var(--muted);">d=0.32</div>
+        </div>
+        <div style="color:var(--dim);font-size:18px;">›</div>
+        <div style="flex:1;text-align:center;padding:6px 3px;background:var(--pur-l);border:1.5px solid var(--pur);border-radius:4px;">
+          <div style="font-family:&#39;JetBrains Mono&#39;;font-size:17px;font-weight:700;color:var(--pur);">4.67</div>
+          <div style="font-size:14px;color:var(--pur);font-weight:600;">naugara</div>
+          <div style="font-size:11px;color:var(--muted);">d=−.12</div>
+        </div>
+      </div>
+      <p class="sm" style="text-align:center;">直後 S̄ (bits)</p>
+      <table>
+        <thead><tr><th>ペアワイズ</th><th class="r">差</th><th class="r">d</th></tr></thead>
+        <tbody>
+          <tr><td>mmja–unu</td><td class="r">+0.86</td><td class="r" style="font-weight:600;">1.03</td></tr>
+          <tr><td>mmja–naugara</td><td class="r">+1.84</td><td class="r" style="font-weight:600;">2.27</td></tr>
+          <tr><td>unu–naugara</td><td class="r">+0.98</td><td class="r" style="font-weight:600;">1.36</td></tr>
+        </tbody>
+      </table>
+      <p class="sm">全ペア d&gt;0.9（large）</p>
+    </div>
+    <div>
+      <h3>機能的解釈（暫定。アドバイス求む）</h3>
+
+      <div style="background:var(--red-bg);border-left:3px solid var(--red);border-radius:0 4px 4px 0;padding:5px 8px;margin:4px 0;">
+        <div style="font-size:18px;font-weight:700;color:var(--red);">mmja — 談話標識（聞き手への負荷アラート）</div>
+        <p class="sm" style="margin:2px 0 0;">直後に予測困難な内容語（N・V・PRN）が来る（post S̄=6.80, d=0.81）。情報密度の遷移点を標示し、「これから難しい内容が来る」と聞き手に予告する。</p>
+      </div>
+
+      <div style="background:rgba(30,74,122,.04);border-left:3px solid var(--blu);border-radius:0 4px 4px 0;padding:5px 8px;margin:4px 0;">
+        <div style="font-size:18px;font-weight:700;color:var(--blu);">unu — フィラー（語彙検索？ cf. 日本語について定延・田窪 1995）</div>
+        <p class="sm" style="margin:2px 0 0;">後続は名詞に集中（45%）。post S̄=5.68（d=0.32, p&lt;.0001）で平均より有意に高いが mmja ほどではない。名詞句の語彙検索ポーズとして機能か。</p>
+        <p style="font-size:13px;color:#5a6a7a;line-height:1.4;margin:8px 0 0;padding:4px 8px;background:rgba(30,74,122,.05);border-left:2px solid var(--blu);border-radius:0 3px 3px 0;">定延利之・田窪行則 (1995)「談話における心的操作モニター機構 ―心的操作標識「ええと」と「あの（ー）」―」『言語研究』108: 74-93.</p>
+      </div>
+
+      <div style="background:rgba(106,61,122,.04);border-left:3px solid var(--pur);border-radius:0 4px 4px 0;padding:5px 8px;margin:4px 0;">
+        <div style="font-size:18px;font-weight:700;color:var(--pur);">naugara — フィラー（非制御的言い淀み？）</div>
+        <p class="sm" style="margin:2px 0 0;">post S̄=4.67（d=−.12, p&lt;.0001）。mmja と逆に予測容易な語が後続するが、効果が小さく、平均に近い。何かを宣告するというより、稀に出てくる言い淀み（後続探索）の可能性あり。ただし、n=23 で要追加データ。自身の S̄ が三者中最高（6.19）なのは低頻度ゆえ。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="background:#0F1923;border:2px solid rgba(255,255,255,0.15);border-radius:6px;padding:14px 20px;margin:10px 0 12px;text-align:center;">
+    <strong style="color:#f0ebe3;font-size:20px;letter-spacing:.04em;line-height:1.5;">「フィラーっぽいやつら」を雑に扱わず、諦めずに記述すると、なんかわかってきた気がする（!?）</strong>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#e8f4e8 0%,#dcefd8 100%);border:1.5px solid rgba(30,107,84,.3);border-radius:6px;padding:12px 16px;margin-top:14px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--grn),var(--gld),var(--red));"></div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+      <h3 style="margin:0;color:var(--grn);font-family:&#39;Noto Serif JP&#39;,&#39;Cormorant Garamond&#39;,serif;font-size:20px;font-weight:700;letter-spacing:.04em;">近隣方言との比較</h3>
+      <span style="font-size:18px;color:var(--gld);font-weight:600;letter-spacing:.03em;">— 着目ポイントが大きく違う —</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;">
+      <div style="padding:10px 12px;border-radius:4px;border:2px solid var(--grn);background:rgba(30,107,84,.08);">
+        <div style="font-size:15px;font-weight:700;color:var(--grn);letter-spacing:.03em;margin-bottom:4px;">池間 mmya（川田他 2009）</div>
+        <div style="font-size:17px;color:var(--text);line-height:1.5;font-weight:500;">← <strong style="color:var(--grn);font-size:18px;">左側</strong>に着目<br><span style="font-size:15px;color:var(--muted);">すでに言われた内容を背景化</span></div>
+      </div>
+      <div style="display:flex;align-items:center;padding:0 8px;font-size:24px;color:var(--gld);font-weight:700;">⇄</div>
+      <div style="padding:10px 12px;border-radius:4px;border:2px solid var(--red);background:rgba(158,58,30,.06);">
+        <div style="font-size:15px;font-weight:700;color:var(--red);letter-spacing:.03em;margin-bottom:4px;">本研究 mmja</div>
+        <div style="font-size:17px;color:var(--text);line-height:1.5;font-weight:500;"><strong style="color:var(--red);font-size:18px;">右側</strong>に着目 →<br><span style="font-size:15px;color:var(--muted);">これから言う内容の予測困難さを予告</span></div>
+      </div>
+    </div>
+    <div style="margin:8px 0 0;padding:6px 12px;border-radius:4px;background:rgba(138,110,30,.08);border:1.5px solid rgba(138,110,30,.3);font-size:18px;font-weight:600;color:var(--gld);text-align:center;">＋ 本研究は <span class="m mu" style="font-size:16px;">unu</span>・<span class="m mn" style="font-size:16px;">naugara</span> との体系的対立を新たに示した</div>
+    <p style="font-size:14px;color:#4a6a50;line-height:1.5;margin:8px 0 0;padding:4px 8px;background:rgba(30,107,84,.06);border-left:2px solid var(--grn);border-radius:0 3px 3px 0;font-weight:500;">川田拓也・林由華・岩崎勝一・大野剛 (2009)「琉球語宮古池間方言における mmya の談話機能」柴崎礼士郎 (編)『言語文化のクロスロード』111–130, 文進印刷</p>
+  </div>
+</div>
+
+</div>
+
+
+</body></html>
